@@ -1,12 +1,24 @@
 #include "Medicine.h"
 
 
-
-Medicine::Medicine()
+string Medicine::getName()
 {
+	return name;
 }
 
-
-Medicine::~Medicine()
+int Medicine::getRecoverValue()
 {
+	return recoverValue;
+}
+
+int Medicine::getPrice()
+{
+	return price;
+}
+
+void Medicine::setInformation(string name, int recoverValue, double price)
+{
+	this->name = name;
+	this->recoverValue = recoverValue;
+	this->price = price;
 }

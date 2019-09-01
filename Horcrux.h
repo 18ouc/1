@@ -15,6 +15,3 @@ private:
 
 
 #endif // !_HORCRUX
-
-
-

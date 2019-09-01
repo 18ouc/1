@@ -1,12 +1,22 @@
 #include <iostream>
+#include "sorcerer.h"
+#include "Plot.h"
 using namespace std;
 int main() {
+	int ifEnd = 0;
+	sorcerer *mySorcerer = new sorcerer;
+	Plot myPlot;
 	cout << "Harry		Potter" << endl;
 	cout << "1.新的旅途			2.读取存档			3.退出" << endl;
 	int choice;
 	cin >> choice;
+	system("cls");
 	switch (choice) {
 	case 1:
+		myPlot.init_new(mySorcerer);
+		ifEnd = myPlot.init1(mySorcerer);
+		if (ifEnd == -1)
+			return 0;
 		break;
 	case 2:
 		break;
@@ -16,4 +26,5 @@ int main() {
 	default:
 		cout << "输入错误请重新输入！" << endl;
 	}
+	delete mySorcerer;
 }

@@ -4,26 +4,64 @@
 #include <string>
 #include "Equipment.h"
 #include "Horcrux.h"
+#include <iostream>
+#include "Skill.h"
+#include "Person.h"
+#include "badPerson.h"
+#include <cstdlib>
+#include <ctime>
+#include "room.h"
+#include "Medicine.h"
+#include "Magicitem.h"
 using namespace std;
 
-class sorcerer
+class sorcerer :
+	public Person
 {
 public:
 	sorcerer();
 	~sorcerer();
-	void attack(sorcerer s);
-	void attack(string name);
+	void setValue(double disguiseValue = 0, double forceValue = 0, double defenceValue = 0, double magicValue = 0, double bloodValue = 0, string name = 0, double money = 0);
+	bool isSkillEmpty();
+	int getSkillNum();
+	int getEquipmentNum();
+	int getHorcruxNum();
+	vector<Skill> getSkill();
+	double getBloodValue();
+	double getForceValue();
+	void increaseBlood(int blood);
+	void decreaseBlood(int blood);
+	void setBlood(int blood);
+	void addSkill(Skill s);
+	void increaseSkillNum();
 	void showInformation();
-	void increase(string name);
-	void decrease(string name);
-	void showMap(int num);
+	bool battle(sorcerer *mySorcerer, badPerson &badperson);
+	void inRoom(room *myroom);
+	void increaseMoney(int money);
+	void decreaseMoney(int money);
+	void addMedicine(Medicine temp);
+	void showMedicine();
+	void addMagicitem(Magicitem temp);
+	void showMagicItem();
+	bool isHasTheMagicitem(int id);
+	void useMedicine(int op = 0);
+	room *getRoom();
+	string getName();
 private:
-	double disguiseValue;
+	double disguiseValue;	
 	double forceValue;
-	double defenceValuie;
+	double defenceValue;
 	double magicValue;
 	double bloodValue;
-	vector<Equipment>equipment;
+	int money;
+	string name;
+	vector<Magicitem>magicitem;
 	vector<Horcrux>horcrux;
+	vector<Skill>skill;
+	vector<Medicine>medicine;
+	int skillNum;
+	int equipmentNum;
+	int horcruxNum;
+	room *myroom;
 };
 #endif
