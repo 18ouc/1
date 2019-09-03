@@ -35,7 +35,7 @@ public:
 	void addSkill(Skill s);
 	void increaseSkillNum();
 	void showInformation();
-	bool battle(sorcerer *mySorcerer, badPerson &badperson);
+	bool battle(sorcerer *mySorcerer, badPerson badperson);
 	void inRoom(room *myroom);
 	void increaseMoney(int money);
 	void decreaseMoney(int money);

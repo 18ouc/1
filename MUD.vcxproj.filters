@@ -74,9 +74,6 @@
     <ClInclude Include="Horcrux.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="G1.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="map.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -95,19 +92,10 @@
     <ClInclude Include="Plot.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="G2.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="Shop.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Magicitem.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="G3.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="G4.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

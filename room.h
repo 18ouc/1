@@ -19,6 +19,10 @@ public:
 	void addBadPerson(badPerson temp);
 	void inRoom();
 	bool getIfIn();
+	void showBadPerson();
+	void eraseBadPerson(int id);
+	badPerson getBadPerson(int id);
+	int getBadPersonSize();
 	~room();
 private:
 	string name;

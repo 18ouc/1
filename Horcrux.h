@@ -7,10 +7,13 @@ using namespace std;
 class Horcrux
 {
 public:
-	Horcrux();
+	Horcrux(string name = 0, int id = 0);
 	~Horcrux();
+	string getName();
+	int getId();
 private:
 	string name;
+	int id;
 };
 
 

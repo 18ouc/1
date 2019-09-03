@@ -90,7 +90,7 @@ void sorcerer::showInformation()
 	cout << "ÑªÁ¿   = " << bloodValue << endl;
 	cout << "½ð±Ò   = " << money << endl;
 }
-bool sorcerer::battle(sorcerer * mySorcerer, badPerson & badperson)
+bool sorcerer::battle(sorcerer * mySorcerer, badPerson badperson)
 {
 	double otherBloodNum = badperson.getblood();
 	int otherDamageNum_Down = badperson.getDown();

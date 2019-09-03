@@ -14,9 +14,14 @@ int main() {
 	switch (choice) {
 	case 1:
 		myPlot.init_new(mySorcerer);
-		ifEnd = myPlot.init1(mySorcerer);
-		if (ifEnd == -1)
-			return 0;
+		//ifEnd = myPlot.init1(mySorcerer);
+		//if (ifEnd == -1)
+		//	return 0;
+		//ifEnd = myPlot.init2(mySorcerer);
+		//ifEnd = myPlot.init3(mySorcerer);
+		//ifEnd = myPlot.init4(mySorcerer);
+		//ifEnd = myPlot.init5(mySorcerer);
+		ifEnd = myPlot.init6(mySorcerer);
 		break;
 	case 2:
 		break;

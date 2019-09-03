@@ -136,10 +136,6 @@
   <ItemGroup>
     <ClInclude Include="badPerson.h" />
     <ClInclude Include="Equipment.h" />
-    <ClInclude Include="G1.h" />
-    <ClInclude Include="G2.h" />
-    <ClInclude Include="G3.h" />
-    <ClInclude Include="G4.h" />
     <ClInclude Include="goodPerson.h" />
     <ClInclude Include="Horcrux.h" />
     <ClInclude Include="Magicitem.h" />
