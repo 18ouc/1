@@ -1,6 +1,7 @@
 #include <iostream>
 #include "sorcerer.h"
 #include "Plot.h"
+#include "File.h"
 using namespace std;
 int main() {
 	int ifEnd = 0;
@@ -21,9 +22,11 @@ int main() {
 		//ifEnd = myPlot.init3(mySorcerer);
 		//ifEnd = myPlot.init4(mySorcerer);
 		//ifEnd = myPlot.init5(mySorcerer);
-		ifEnd = myPlot.init6(mySorcerer);
+		//ifEnd = myPlot.init6(mySorcerer);
+		//ifEnd = myPlot.initFinal(mySorcerer);
 		break;
 	case 2:
+
 		break;
 	case 3:
 		cout << "你已经成功退出游戏。" << endl;

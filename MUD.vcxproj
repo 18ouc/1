@@ -120,6 +120,7 @@
   <ItemGroup>
     <ClCompile Include="badPerson.cpp" />
     <ClCompile Include="Equipment.cpp" />
+    <ClCompile Include="File.cpp" />
     <ClCompile Include="goodPerson.cpp" />
     <ClCompile Include="Horcrux.cpp" />
     <ClCompile Include="Magicitem.cpp" />
@@ -136,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="badPerson.h" />
     <ClInclude Include="Equipment.h" />
+    <ClInclude Include="File.h" />
     <ClInclude Include="goodPerson.h" />
     <ClInclude Include="Horcrux.h" />
     <ClInclude Include="Magicitem.h" />

@@ -23,12 +23,6 @@ public:
 	~sorcerer();
 	void setValue(double disguiseValue = 0, double forceValue = 0, double defenceValue = 0, double magicValue = 0, double bloodValue = 0, string name = 0, double money = 0);
 	bool isSkillEmpty();
-	int getSkillNum();
-	int getEquipmentNum();
-	int getHorcruxNum();
-	vector<Skill> getSkill();
-	double getBloodValue();
-	double getForceValue();
 	void increaseBlood(int blood);
 	void decreaseBlood(int blood);
 	void setBlood(int blood);
@@ -45,14 +39,29 @@ public:
 	void showMagicItem();
 	bool isHasTheMagicitem(int id);
 	void useMedicine(int op = 0);
+	void setMyCheckPoint(int temp = 0);
+	int getDisguiseValue();
+	int getBloodValue();
+	int getForceValue();
+	int getDefenceValue();
+	int getMagicValue();
+	int getMoney();
 	room *getRoom();
 	string getName();
+	vector<Magicitem> getMagicitem();
+	vector<Skill> getSkill();
+	vector<Horcrux> getHorcrux();
+	vector<Medicine> getMedicine();
+	int getSkillNum();
+	int getEquipmentNum();
+	int getHorcruxNum();
+	int getMyCheckpoint();
 private:
-	double disguiseValue;	
-	double forceValue;
-	double defenceValue;
-	double magicValue;
-	double bloodValue;
+	int disguiseValue;	
+	int forceValue;
+	int defenceValue;
+	int magicValue;
+	int bloodValue;
 	int money;
 	string name;
 	vector<Magicitem>magicitem;
@@ -63,5 +72,6 @@ private:
 	int equipmentNum;
 	int horcruxNum;
 	room *myroom;
+	int myCheckpoint;
 };
 #endif

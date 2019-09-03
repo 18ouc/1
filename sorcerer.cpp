@@ -46,17 +46,41 @@ int sorcerer::getHorcruxNum()
 {
 	return horcruxNum;
 }
+int sorcerer::getMyCheckpoint()
+{
+	return myCheckpoint;
+}
 vector<Skill> sorcerer::getSkill()
 {
 	return skill;
 }
-double sorcerer::getBloodValue()
+vector<Horcrux> sorcerer::getHorcrux()
+{
+	return horcrux;
+}
+vector<Medicine> sorcerer::getMedicine()
+{
+	return medicine;
+}
+int sorcerer::getBloodValue()
 {
 	return bloodValue;
 }
-double sorcerer::getForceValue()
+int sorcerer::getForceValue()
 {
 	return forceValue;
+}
+int sorcerer::getDefenceValue()
+{
+	return defenceValue;
+}
+int sorcerer::getMagicValue()
+{
+	return magicValue;
+}
+int sorcerer::getMoney()
+{
+	return money;
 }
 void sorcerer::increaseBlood(int blood)
 {
@@ -227,6 +251,14 @@ void sorcerer::useMedicine(int op)
 	this->increaseBlood(medicine[op - 1].getRecoverValue());
 	medicine.erase(it);
 }
+void sorcerer::setMyCheckPoint(int temp)
+{
+	myCheckpoint = temp;
+}
+int sorcerer::getDisguiseValue()
+{
+	return disguiseValue;
+}
 room * sorcerer::getRoom()
 {
 	return myroom;
@@ -234,4 +266,9 @@ room * sorcerer::getRoom()
 string sorcerer::getName()
 {
 	return name;
+}
+
+vector<Magicitem> sorcerer::getMagicitem()
+{
+	return magicitem;
 }

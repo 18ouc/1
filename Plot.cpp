@@ -1,4 +1,40 @@
 #include "Plot.h"
+#include "File.h"
+#include <fstream>
+
+void Plot::init_new(sorcerer * mySorcerer)
+{
+	
+	cout << "请选择你的想获得的人物属性加成:" << endl;
+	cout << "1.战士系		 2.坦克系 			3.巫术系" << endl;
+	int op;
+	string name;
+	cin >> op;
+	cout << "请输入你要设置的角色名字：" << endl;
+	cin >> name;
+	File myFile(name + ".txt");
+	ofstream tempFile(name + ".txt");
+	
+	system("cls");
+	switch (op)
+	{
+	case 1:
+		mySorcerer->setValue(100, 120, 100, 100, 100, name, 3000);
+		break;
+	case 2:
+		mySorcerer->setValue(100, 100, 120, 100, 100, name, 3000);
+		break;
+	case 3:
+		mySorcerer->setValue(100, 100, 100, 120, 100, name, 3000);
+		break;
+	default:
+		cout << "输入错误！请重新输入！" << endl;
+		break;
+	}
+	//tempFile << mySorcerer->get
+}
+
+
 
 int Plot::init1(sorcerer * mySorcerer)
 {
@@ -158,29 +194,6 @@ int Plot::init1(sorcerer * mySorcerer)
 	return 1;
 }
 
-void Plot::init_new(sorcerer * mySorcerer)
-{
-	cout << "请选择你的人物:" << endl;
-	cout << "1.Harry Potter			2. Ron Weasley 			3.Hermione Granger" << endl;
-	int op;
-	cin >> op;
-	system("cls");
-	switch (op)
-	{
-	case 1:
-		mySorcerer->setValue(100, 120, 100, 100, 100, "Harry Potter", 3000);
-		break;
-	case 2:
-		mySorcerer->setValue(100, 100, 120, 100, 100, "Ron Weasley", 3000);
-		break;
-	case 3:
-		mySorcerer->setValue(100, 100, 100, 120, 100, "Hermione Granger", 3000);
-		break;
-	default:
-		cout << "输入错误！请重新输入！" << endl;
-		break;
-	}
-}
 
 Plot::Plot()
 {
@@ -1222,7 +1235,10 @@ int Plot::initFinal(sorcerer * mySorcerer)
 				mySorcerer->inRoom(&hall);
 			}
 			break;
+		}
 	}
 	cout << "恭喜你通过所有关卡" << endl;
 	return 1;
 }
+
+

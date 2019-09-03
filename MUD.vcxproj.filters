@@ -57,6 +57,9 @@
     <ClCompile Include="Magicitem.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="File.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sorcerer.h">
@@ -96,6 +99,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Magicitem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="File.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
