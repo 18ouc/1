@@ -10,6 +10,7 @@ void room::addGoodPerson(goodPerson temp) {
 
 void room::addBadPerson(badPerson temp) {
 	badperson.push_back(temp);
+	badPersonNum++;
 }
 
 void room::inRoom() {
@@ -40,8 +41,12 @@ void room::eraseBadPerson(int id)
 	badperson.erase(it);
 }
 
-badPerson room::getBadPerson(int id) {
+badPerson room::getBadPersonSpecial(int id) {
 	return badperson[id - 1];
+}
+
+vector<badPerson> room::getBadPerson() {
+	return badperson;
 }
 
 int room::getBadPersonSize() {
@@ -51,6 +56,8 @@ int room::getBadPersonSize() {
 void room::setIfIn(bool temp) {
 	ifIn = temp;
 }
+
+
 
 room::~room() {
 }

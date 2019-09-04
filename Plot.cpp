@@ -2,7 +2,12 @@
 #include "File.h"
 #include <fstream>
 #include <iostream>
-//店铺中塞入技能 保存该关卡信息 记录地点 传入参数表明这是读入进去的
+Plot::Plot() {
+}
+
+Plot::~Plot() {
+}
+
 void Plot::init_new(sorcerer * mySorcerer) {
 	File myFiles("myFiles.txt");
 	cout << "请选择你的想获得的人物属性加成:" << endl;
@@ -42,12 +47,17 @@ void Plot::init_new(sorcerer * mySorcerer) {
 	outFiles.close();
 }
 
-int Plot::init1(sorcerer * mySorcerer, int myCheckPoint) {	//第一关
+
+
+
+
+
+int Plot::init1(sorcerer * mySorcerer, int myCheckPoint, bool ifNew) {	//第一关
 	//本关剧情格式化记录
-	//小药水数目 中药水数目 大药水数目 技能 ifKillKerberos roomNum 0大厅 1校长室 2阁楼 3地穴四个地图的进入情况
+	//小药水数目 中药水数目 大药水数目 技能 ifPassMaze  roomNum 0大厅 1校长室 2阁楼 3地穴四个地图的进入情况
 	//bool end = 0;	//
 	//开局送的礼物
-	if (myCheckPoint == 0) {
+	if (ifNew == 0) {
 		cout << "魔法师们，为了让你们变得更加强大！我们给了你一件礼物。" << endl;
 		Magicitem magicStick("魔法棍", 1);
 		mySorcerer->addMagicitem(magicStick);
@@ -62,7 +72,7 @@ int Plot::init1(sorcerer * mySorcerer, int myCheckPoint) {	//第一关
 	Medicine medicineTempSmall("小药水", 20, 400);
 	Medicine medicineTempMiddle("中药水", 40, 800);
 	Medicine medicineTempLarge("大药水", 60, 1200);
-	if (myCheckPoint == 0) {
+	if (ifNew == 0) {
 		medicine.push_back(medicineTempSmall);
 		medicine.push_back(medicineTempSmall);
 		medicine.push_back(medicineTempMiddle);
@@ -81,10 +91,10 @@ int Plot::init1(sorcerer * mySorcerer, int myCheckPoint) {	//第一关
 	}
 	//超市设置
 	//本关魔法咒语设置
-	Skill Alohomora("Alohomora", 10);
+	Skill Alohomora("Alohomora", 100);
 	//一些判断
 	bool check = 1;		//判断是否通关
-	bool ifKillKerberos = 1;	//判断是否打败三头狗
+	bool ifKillKerberos = 0;	//判断是否打败三头狗
 	//本关地点设置
 	room hall("大厅");
 	room President_Office("校长室");
@@ -103,10 +113,8 @@ int Plot::init1(sorcerer * mySorcerer, int myCheckPoint) {	//第一关
 		system("pause");
 		system("cls");
 		//开局背景故事
-		if (myCheckPoint == 0) {
-			cout << "欢迎进入第一关~" << endl;
-			cout << "恭喜你在开局获得了一个咒语，你可以通过它进入某个房间..." << endl;
-		}
+		cout << "欢迎进入第一关~" << endl;
+		cout << "恭喜你在开局获得了一个咒语，你可以通过它进入某个房间..." << endl;
 	}
 	//人物设置
 	goodPerson Dumbledore("邓布利多", "明天镜子就要搬到一个新的地方了，哈利，我请你不要再去找它了。如果你哪天碰巧看见它，你要有心理准备。\n");
@@ -133,7 +141,7 @@ int Plot::init1(sorcerer * mySorcerer, int myCheckPoint) {	//第一关
 	link[AtticWithNum.second][CryptWithNum.second] = 1;
 	link[CryptWithNum.second][AtticWithNum.second]= 1;
 
-	if (myCheckPoint == 1) {
+	if (ifNew == 1) {
 		cout << "欢迎你再次进入游戏，继续开启第一关的征程。" << endl;
 		system("pause");
 		system("cls");
@@ -400,6 +408,7 @@ int Plot::init1(sorcerer * mySorcerer, int myCheckPoint) {	//第一关
 				}
 				else {
 					cout << "操作失败，你已退出该房间！" << endl;
+					mySorcerer->inRoom(&Attic);
 				}
 			}
 			else {
@@ -431,128 +440,296 @@ int Plot::init1(sorcerer * mySorcerer, int myCheckPoint) {	//第一关
 	return 1;
 }
 
-Plot::Plot() {
-}
 
-Plot::~Plot() {
-}
 
-int Plot::init2(sorcerer *mySorcerer) {
+
+
+
+int Plot::init2(sorcerer *mySorcerer, int myCheckPoint, bool ifNew) {
+	//本关剧情格式化记录
+	//小药水数目 中药水数目 大药水数目 技能 ifKillKerberos roomNum 0大厅 1校长室 2阁楼 3地穴四个地图的进入情况
+	//药水设置 2大2中2小
+	//药水数目需要进行一个记录 记录的格式为 X X X分别指小中大
+	vector<Medicine> medicine;
+	Medicine tempMedicine(" ", 0, 0);
+	Medicine medicineTempSmall("小药水", 20, 400);
+	Medicine medicineTempMiddle("中药水", 40, 800);
+	Medicine medicineTempLarge("大药水", 60, 1200);
+	if (ifNew == 0) {
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempLarge);
+		medicine.push_back(medicineTempLarge);
+	}
+	//超市里技能设置
+	//咒语：火焰熊熊（火焰咒）:Incendio：15  600
+	vector<Skill> skill;
+	Skill tempSkill(" ", 0, 0);
+	Skill Incendio("Incendio", 15, 800);
+	if (myCheckPoint != 2) {
+		skill.push_back(Incendio);
+	}
+	//一些判断
+	bool check = 1;
+	//一些装备
+	Magicitem phoenix("凤凰", 2);
+	//本关地点设置
 	room Crypt("地穴");
 	room bathroom("洗手间");
-	room chamber("密室");
 	room hathouse("帽子屋");
+	room chamber("密室");
+	int roomNum = 0;
 	mySorcerer->inRoom(&Crypt);
-	vector<Medicine> medicine_G2;
-	Medicine medicineTempSmall("小药水", 20, 400);
-	medicine_G2.push_back(medicineTempSmall);
-	medicine_G2.push_back(medicineTempSmall);
-	Medicine medicineTempMiddle("中药水", 40, 800);
-	medicine_G2.push_back(medicineTempMiddle);
-	medicine_G2.push_back(medicineTempMiddle);
-	Medicine medicineTempLarge("大药水", 60, 1200);
-	
-	medicine_G2.push_back(medicineTempLarge);
-	vector<Skill> a;
-	Shop shop_G2(medicine_G2, a,"奇幻空间魔术用品店", 5);
-
-	bool check = 1;
-	Magicitem phoenix("凤凰", 2);
-	map map2("\t0.*******\t\t\t\t1.*******\t\t\t3.*******\n\t*\t*\t\t\t\t*\t*\t\t\t*\t*\n\t*地穴\t*\t < --------------->\t*洗手间\t*\t----------->\t*密室\t*\n\t*\t*\t\t\t\t*\t*\t\t\t*\t*\n\t*********\t\t\t\t*********\t\t\t*********\n\t / \\.\t\t\t\t\t / \\.\t\n\t || \t\t\t\t\t || \n\t || \t\t\t\t\t || \n\t || \t\t\t\t\t || \n\t || \t\t\t\t\t || \n\t || \t\t\t\t\t || \n\t  \\ / \t\t\t\t\t || \t\n\t2.*******\t\t\t\t || \n\t*\t*\t\t\t\t || \n\t*帽子屋\t*<===================================\n\t*\t*\n\t*********");
-	cout << "学校发生了一系列“恐怖”事件—学生莫名其妙被石化\n墙上出现了恐怖的血字...\n人们怀疑是蛇怪所为\n传说中的密室被斯莱特林的继承人打开\n哈利因为会蛇佬腔被所有人怀疑。。。。。。。" << endl;
-	system("pause");
-	system("cls");
-	cout << "欢迎进入第二关~" << endl;
-	cout << "你目前所在的位置: " << mySorcerer->getRoom()->getName() << endl;
-	cout << "据说与洗手间的桃金娘对话可以获得神秘的东西..." << endl;
-	goodPerson Moaning_Myrtle("桃金娘", "盥洗池里有神奇的东西...当时我就是因为看到它的眼睛而...\n");
-	bathroom.addGoodPerson(Moaning_Myrtle);
-
-	//mySorcerer->decreaseBlood(100);//测试debug用
-
-	badPerson Basilisk(100, 10, 35, "蛇怪");
-	//badPerson Kerberos(20, 0, 5, "三头狗");
-	chamber.addBadPerson(Basilisk);
-	while (check) {
+	//地图设置 0地穴 1洗手间 2帽子屋 3密室
+	map map("\t*********\t\t\t\t*********\t\t\t*********\n\t*\t*\t\t\t\t*\t*\t\t\t*\t*\n\t*地穴\t*\t<--------------->\t*洗手间\t*\t<---------->\t*密室\t*\n\t*\t*\t\t\t\t*\t*\t\t\t*\t*\n\t*********\t\t\t\t*********\t\t\t*********\n\t  /\\\t\t\t\t\t   /\\\t\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  \\/\t\t\t\t\t   ||\t\n\t*********\t\t\t\t   ||\n\t*\t*\t\t\t\t   ||\n\t*帽子屋\t*<===================================\n\t*\t*\n\t*********");
+	if (ifNew == 0) {
+		//开局背景故事
+		cout << "学校发生了一系列“恐怖”事件—学生莫名其妙被石化\n墙上出现了恐怖的血字...\n人们怀疑是蛇怪所为\n传说中的密室被斯莱特林的继承人打开\n哈利因为会蛇佬腔被所有人怀疑。。。。。。。" << endl;
 		system("pause");
 		system("cls");
-		cout << "输入100可以查看当前自己的属性" << endl;
-		cout << "输入101可以查看或使用自己拥有的药品" << endl;
-		cout << "输入102可以查看自己目前已经拥有的魔法道具" << endl;
-		cout << "输入103可以进入关卡的店铺" << endl;
-		cout << "输入110可以保存当前进度" << endl;
-		cout << "输入111可以退出当前游戏" << endl;
+		cout << "欢迎进入第二关~" << endl;
+		cout << "你目前所在的位置: " << mySorcerer->getRoom()->getName() << endl;
+		cout << "据说与洗手间的桃金娘对话可以获得神秘的东西..." << endl;
+	}
+	//人物设置
+	goodPerson Moaning_Myrtle("桃金娘", "盥洗池里有神奇的东西...当时我就是因为看到它的眼睛而...\n");
+	bathroom.addGoodPerson(Moaning_Myrtle);
+	badPerson Basilisk(100, 10, 35, "蛇怪");
+	chamber.addBadPerson(Basilisk);
+	//使用pair绑定
+	pair<string, int> CryptWithNum("地穴", 0);
+	pair<string, int> bathroomWithNum("洗手间", 1);
+	pair<string, int> hathouseWithNum("帽子屋", 2);
+	pair<string, int> chamberWithNum("密室", 3);
+	//判断连通情况	link[A][B] = 1代表A->B是通的
+	//邻接矩阵
+	bool link[10][10];
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++)
+			link[i][j] = 0;
+	}
+	link[CryptWithNum.second][bathroomWithNum.second] = 1;
+	link[bathroomWithNum.second][CryptWithNum.second] = 1;
+	link[bathroomWithNum.second][chamberWithNum.second] = 1;
+	link[chamberWithNum.second][bathroomWithNum.second] = 1;
+	link[bathroomWithNum.second][hathouseWithNum.second] = 1;
+	link[hathouseWithNum.second][bathroomWithNum.second] = 1;
+	link[hathouseWithNum.second][CryptWithNum.second] = 1;
+	link[CryptWithNum.second][hathouseWithNum.second] = 1;
+	if (ifNew == 1) {
+		cout << "欢迎你再次进入游戏，继续开启第二关的征程。" << endl;
+		system("pause");
+		system("cls");
+		fstream infile(mySorcerer->getName() + "State" + ".txt");
+		//药水初始化
+		int medicineNum = 0;
+		infile >> medicineNum;
+		string medicineName = " ";
+		int recoverValue = 0;
+		int medicinePirce = 0;
+		for (int i = 0; i < medicineNum; i++) {
+			infile >> medicineName >> recoverValue >> medicinePirce;
+			tempMedicine.setInformation(medicineName, recoverValue, medicinePirce);
+			medicine.push_back(tempMedicine);
+		}
+		//技能初始化
+		int skillNum = 0;
+		infile >> skillNum;
+		string skillName = " ";
+		int skillDamage = 0;
+		int skillPrice = 0;
+		for (int i = 0; i < skillNum; i++) {
+			infile >> skillName >> skillDamage >> skillPrice;
+			tempSkill.setValue(skillName, skillDamage, skillPrice);
+			skill.push_back(tempSkill);
+		}
+		//其它杂项初始化
+		infile >> roomNum;
+		bool tempIsInRoom = 0;
+		infile >> tempIsInRoom;
+		Crypt.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		bathroom.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		hathouse.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		chamber.setIfIn(tempIsInRoom);
+		if (roomNum == 0) {
+			mySorcerer->inRoom(&Crypt);
+		}
+		else if (roomNum == 1) {
+			mySorcerer->inRoom(&bathroom);
+		}
+		else if (roomNum == 2) {
+			mySorcerer->inRoom(&hathouse);
+		}
+		else if (roomNum == 3) {
+			mySorcerer->inRoom(&chamber);
+		}
+	}
+	Shop shop(medicine, skill, "西皮士魔术用品店", medicine.size(), skill.size());
+	while (check) {
+		//如果在游戏中死亡
+		if (mySorcerer->getBloodValue() == 0) {
+			mySorcerer->afterDead();
+			system("pause");//格式化处理
+			system("cls");
+		}
+		system("pause");
+		system("cls");
+		cout << "输入 查看属性 可以查看当前自己的属性" << endl;
+		cout << "输入 查用药品 可以查看或使用自己拥有的药品" << endl;
+		cout << "输入 查看道具 可以查看自己目前已经拥有的魔法道具" << endl;
+		cout << "输入 进入店铺 可以进入关卡的店铺" << endl;
+		cout << "输入 保存进度 可以保存当前进度" << endl;
+		cout << "输入 退出游戏 可以退出当前游戏" << endl;
 		cout << "你目前所在的位置为：" << mySorcerer->getRoom()->getName() << endl;
-		cout << "输入地图左上角的数字可以进入该地图" << endl;
+		cout << "输入地图上房间的名字可以进入该房间" << endl;
 		cout << "此关卡的地图：" << endl;
-		map2.showMap();
-		cout << "请输入数字选择:" << endl;
-		int op = 0;
+		map.showMap();
+		cout << "请输入你的选择:" << endl;
+		string op = " ";
 		cin >> op;
-		switch (op)
-		{
-		case 100:
+		if (op == "查看属性") {
 			system("cls");
 			mySorcerer->showInformation();
-			break;
-		case 101:
+		}
+		else if (op == "查用药品") {
 			system("cls");
 			mySorcerer->showMedicine();
-			break;
-		case 102:
+		}
+		else if (op == "查看道具") {
 			system("cls");
 			mySorcerer->showMagicItem();
-			break;
-		case 103:
+		}
+		else if (op == "进入店铺") {
 			system("cls");
-			shop_G2.showShop(mySorcerer);
-			break;
-		case 110:
-			cout << "还未设置" << endl;
-			break;
-		case 111:
+			shop.showShop(mySorcerer);
+		}
+		else if (op == "保存进度") {
+			mySorcerer->setMyCheckPoint(2);
+			//文件处理
+			File myFile(mySorcerer->getName() + ".txt");
+			File checkPointFile(mySorcerer->getName() + "State" + ".txt");//保存该关卡的进度
+			ofstream tempFile;
+			ofstream stateFile;
+			//信息保存操作
+			//本身属性信息保存
+			tempFile.open(mySorcerer->getName() + ".txt");
+			tempFile << mySorcerer->getDisguiseValue() << " "
+				<< mySorcerer->getForceValue() << " "
+				<< mySorcerer->getDefenceValue() << " "
+				<< mySorcerer->getMagicValue() << " "
+				<< mySorcerer->getBloodValue() << " "
+				<< mySorcerer->getMoney() << " "
+				<< mySorcerer->getName() << endl;
+			tempFile << mySorcerer->getMagicitemNum() << " ";
+			for (int i = 0; i < mySorcerer->getMagicitemNum(); i++) {
+				tempFile << mySorcerer->getMagicitem()[i].getName() << " " << mySorcerer->getMagicitem()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getHorcruxNum() << " ";
+			for (int i = 0; i < mySorcerer->getHorcruxNum(); i++) {
+				tempFile << mySorcerer->getHorcrux()[i].getName() << " " << mySorcerer->getHorcrux()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getSkillNum() << " ";
+			for (int i = 0; i < mySorcerer->getSkillNum(); i++) {
+				tempFile << mySorcerer->getSkill()[i].getName() << " " << mySorcerer->getSkill()[i].getDamage() << endl;
+			}
+			tempFile << mySorcerer->getMedicineNum() << " ";
+			for (int i = 0; i < mySorcerer->getMedicineNum(); i++) {
+				tempFile << mySorcerer->getMedicine()[i].getName() << " " << mySorcerer->getMedicine()[i].getRecoverValue() << " " << mySorcerer->getMedicine()[i].getPrice() << endl;
+			}
+			tempFile << mySorcerer->getMyCheckpoint() << endl;
+			cout << "人物属性信息保存成功!" << endl;
+			//关卡信息保存
+			stateFile.open(mySorcerer->getName() + "State" + ".txt");
+			stateFile << shop.getMedicineNum() << " ";
+			for (int i = 0; i < shop.getMedicineNum(); i++) {
+				stateFile << shop.getMedicine()[i].getName() << " "
+					<< shop.getMedicine()[i].getRecoverValue() << " "
+					<< shop.getMedicine()[i].getPrice() << endl;
+			}
+			stateFile << shop.getSkillNum() << " ";
+			for (int i = 0; i < shop.getSkillNum(); i++) {
+				stateFile << shop.getSkill()[i].getName() << " "
+					<< shop.getSkill()[i].getDamage() << " "
+					<< shop.getSkill()[i].getPrice() << endl;
+			}
+			stateFile << roomNum << endl;
+			//0地穴 1洗手间 2帽子屋 3密室四个地图的进入情况
+			stateFile << Crypt.getIfIn() << " "
+				<< bathroom.getIfIn() << " "
+				<< hathouse.getIfIn() << " "
+				<< chamber.getIfIn() << endl;
+			//	//店铺
+			mySorcerer->setMyCheckPoint(2);
+			cout << "该关卡状态信息保存成功！" << endl;
+		}
+		else if (op == "退出游戏") {
 			cout << "你已经结束该游戏。" << endl;
+			system("pause");
+			system("cls");
 			return -1;
 			break;
-		default:
-			cout << "操作失败！" << endl;
-			break;
-		case 1:
+		}
+		//0地穴 1洗手间 2帽子屋 3密室
+		else if (op == "地穴" && roomNum == CryptWithNum.second || op == "洗手间" && roomNum == bathroomWithNum.second || op == "帽子屋" && roomNum == hathouseWithNum.second || op == "校长室" && roomNum == chamberWithNum.second) {
+			system("cls");
+			cout << "你已经在该位置！" << endl;
+			//格式化操作	
+		}
+		else if (op == "洗手间" && link[roomNum][bathroomWithNum.second]) {
+			roomNum = 1;
 			mySorcerer->inRoom(&bathroom);
 			system("cls");
-			cout << "欢迎来到 " << bathroom.getName() << endl;
 			if (bathroom.getIfIn()) {
 				cout << "欢迎您再次来到 " << bathroom.getName() << endl;
-				break;
 			}
-			cout << "\n" << Moaning_Myrtle.getName() << "：" << Moaning_Myrtle.getSentence() << endl;
-			cout << "在与" << Moaning_Myrtle.getName() << "进行完谈话之后， 发现自己拥有蛇语。" << endl;
-			
-			bathroom.inRoom();
-			break;
-		case 2:
+			else {
+				cout << "欢迎来到 " << bathroom.getName() << endl;
+				cout << "\n" << Moaning_Myrtle.getName() << "：" << Moaning_Myrtle.getSentence() << endl;
+				cout << "在与" << Moaning_Myrtle.getName() << "进行完谈话之后， 发现自己拥有蛇语。" << endl;
+				bathroom.inRoom();
+			}
+		}
+		else if (op == "洗手间" && !link[roomNum][bathroomWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达洗手间，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "帽子屋" && link[roomNum][hathouseWithNum.second]) {
+			roomNum = 2;
 			mySorcerer->inRoom(&hathouse);
 			system("cls");
-			cout << "欢迎来到 " << hathouse.getName() << endl;
-			if (bathroom.getIfIn()) {
+			if (hathouse.getIfIn()) {
 				cout << "欢迎您再次来到 " << hathouse.getName() << endl;
-				break;
 			}
-			cout << "只有真正的勇士才能得到" << phoenix.getName() << endl;
-			cout << "你是真正的勇士！" << endl;
-			mySorcerer->addMagicitem(phoenix);
-			hathouse.inRoom();
-			break;
-		case 3:
+			else {
+				cout << "欢迎来到 " << hathouse.getName() << endl;
+				cout << "只有真正的勇士才能得到" << phoenix.getName() << endl;
+				cout << "你是真正的勇士！" << endl;
+				mySorcerer->addMagicitem(phoenix);
+				hathouse.inRoom();
+			}
+		}
+		else if (op == "帽子屋" && !link[roomNum][hathouseWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达帽子屋，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "密室" && link[roomNum][chamberWithNum.second]) {
+			roomNum = 3;
 			mySorcerer->inRoom(&chamber);
 			system("cls");
 			cout << "欢迎来到 " << chamber.getName() << endl;
 			cout << "此时汤姆正在密室里，你是否选择与它进行对话？" << endl;
 			cout << "1.是		2.否" << endl;
-			int op1 = 0;
-			cin >> op1;
+			int op_chamber = 0;
+			cin >> op_chamber;
 			system("cls");
-			if (op1 == 1) {
+			if (op_chamber == 1) {
 				cout << "我是 Tom Marvolo Riddle，换言之我是 Lord Voldemort(伏地魔)！！！\n丝丝斯斯~\n他通过蛇语召唤出了蛇怪。。。" << endl;
 				bool ifWin = 1;
 				ifWin = mySorcerer->isHasTheMagicitem(2);
@@ -564,145 +741,354 @@ int Plot::init2(sorcerer *mySorcerer) {
 					system("cls");
 					cout << "此时蛇妖战斗力被大削，你是否选择与它进行战斗？" << endl;
 					cout << "1.是		2.否" << endl;
-					int op2 = 0;
-					cin >> op2;
+					int op_Basilisk = 0;
+					cin >> op_Basilisk;
 					system("cls");
-					if (op2 == 1) {
+					if (op_Basilisk == 1) {
 						bool ifWin = 0;
 						cout << "战斗开始，你已进入战斗模式..." << endl;
 						ifWin = mySorcerer->battle(mySorcerer, Basilisk);
 						if (ifWin) {
 							cout << "恭喜你成功通过第二关并获得了";
+							check = 0;
+							system("pause");
+							system("cls");
 						}
 						else {
-							cout << "caicaicai" << endl;
+							mySorcerer->inRoom(&Crypt);
+							mySorcerer->setBlood(0);
+							//输出菜
+							cout << "\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\n\t\t   菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\n\t\t   菜\t\t   菜\t\t   菜\t\n\t\t    菜\t\t   菜\t\t  菜\t\n\t\t     菜\t\t   菜\t\t 菜\t\n\n\t\t\t\t   菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t\t   菜\n\t\t\t         菜菜菜\n\t\t\t       菜  菜  菜\n\t\t\t     菜    菜    菜\n\t\t\t   菜      菜      菜\n\t\t\t 菜        菜        菜\n\t\t       菜          菜          菜\n\t\t     菜            菜            菜\n\t\t   菜              菜              菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n" << endl;
+							system("pause");
+							system("cls");
+							mySorcerer->inRoom(&bathroom);
+							roomNum = bathroomWithNum.second;
 						}
 					}
-					else if (op2 == 2) {
+					else if (op_Basilisk == 2) {
 						cout << "你已经逃离战斗。" << endl;
+						mySorcerer->inRoom(&bathroom);
+						roomNum = bathroomWithNum.second;
 					}
 					else {
 						cout << "操作失败，你已退出该房间！" << endl;
+						mySorcerer->inRoom(&bathroom);
+						roomNum = bathroomWithNum.second;
 					}
 				}
 				else {
 					cout << "你被蛇妖的眼睛秒杀。。。\n" << endl;
+					mySorcerer->inRoom(&Crypt);
+					mySorcerer->setBlood(0);
+					//输出菜
+					cout << "\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\n\t\t   菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\n\t\t   菜\t\t   菜\t\t   菜\t\n\t\t    菜\t\t   菜\t\t  菜\t\n\t\t     菜\t\t   菜\t\t 菜\t\n\n\t\t\t\t   菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t\t   菜\n\t\t\t         菜菜菜\n\t\t\t       菜  菜  菜\n\t\t\t     菜    菜    菜\n\t\t\t   菜      菜      菜\n\t\t\t 菜        菜        菜\n\t\t       菜          菜          菜\n\t\t     菜            菜            菜\n\t\t   菜              菜              菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n" << endl;
+					system("pause");
+					system("cls");
+					mySorcerer->inRoom(&bathroom);
+					roomNum = bathroomWithNum.second;
 				}
 			}
-			else if (op1 == 2) {
+			else if (op_chamber == 2) {
 				cout << "你已经逃离与他对话。" << endl;
+				mySorcerer->inRoom(&bathroom);
+				roomNum = bathroomWithNum.second;
 			}
 			else {
 				cout << "操作失败，你已退出该房间！" << endl;
+				mySorcerer->inRoom(&bathroom);
+				roomNum = bathroomWithNum.second;
 			}
-			break;
+		}
+		else if (op == "密室" && !link[roomNum][chamberWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达密室，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "地穴" && link[roomNum][CryptWithNum.second]) {
+			system("cls");
+			cout << "欢迎来到地穴~" << endl;
+			roomNum = 0;
+			mySorcerer->inRoom(&Crypt);
+		}
+		else if (op == "地穴" && !link[roomNum][CryptWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达地穴，请仔细观察地图！" << endl;
+			//格式化操作	
+		}
+		else {
+			system("cls");
+			cout << "操作失败！" << endl;
+			//格式化操作	
 		}
 	}
 	return 1;
 }
 
-int Plot::init3(sorcerer * mySorcerer)
-{
-	vector<Medicine> medicine_G3;
-	Medicine medicineTempSmall("小药水", 20, 400);
-	medicine_G3.push_back(medicineTempSmall);
-	medicine_G3.push_back(medicineTempSmall);
+
+
+
+
+
+int Plot::init3(sorcerer * mySorcerer, int myCheckPoint, bool ifNew) {
+	//本关剧情格式化记录
+	//小药水数目 中药水数目 大药水数目 技能 ifKillKerberos roomNum 0大厅 1校长室 2阁楼 3地穴四个地图的进入情况
+	
+	//药水设置
+	Medicine tempMedicine(" ", 0, 0);
+	vector<Medicine> medicine;
+	Medicine medicineTempSmall("小药水", 20, 400);	
 	Medicine medicineTempMiddle("中药水", 40, 800);
-	medicine_G3.push_back(medicineTempMiddle);
-	medicine_G3.push_back(medicineTempMiddle);
 	Medicine medicineTempLarge("大药水", 60, 1200);
-	medicine_G3.push_back(medicineTempLarge);
-	vector<Skill> a;
-	Shop shop_G3(medicine_G3, a, "奇幻空间魔术用品店", 5);
-	//商店里面有守护神咒可以买不买很难通关
+	if (ifNew == 0) {
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempLarge);
+	}
+	//超市里技能设置
+	//咒语：粉身碎骨（粉碎咒）:Reducto：20 800
+	vector<Skill> skill;
+	Skill tempSkill(" ", 0, 0);
+	Skill Reducto("Reducto", 20, 1000);
+	if (myCheckPoint != 3) {
+		skill.push_back(Reducto);
+	}
+	//一些判断
 	bool check = 1;
+	bool ifKillPettigrew = 0;
+	//本关地点设置 0密室 1礼堂 2别墅 3湖泊	
 	room chamber("密室");
 	room auditorium("礼堂");
 	room villa("别墅");
 	room lakes("湖泊");
-	Magicitem phoenix("凤凰", 2);
+	int roomNum = 0; //储存当前所在的房间号
 	mySorcerer->inRoom(&chamber);
-	map map3("\t2.*******\t\t\t\t1.*******\t\t\t\t0.*******\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*别墅\t*\t<--------------->\t*礼堂\t*\t<--------------->\t*密室\t*\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********\t\t\t\t*********\n\t  /\\.\t\t\t\t\t   /\\.\t\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  \\/\t\t\t\t\t   ||\t\n\t3.*******\t\t\t\t   ||\n\t*\t*\t\t\t\t   ||\n\t*湖泊\t*====================================\n\t*\t*\n\t*********");
-	cout << "得知阿兹卡班罪犯小天狼星逃出监狱\n而哈利等人在去霍格莫德时无意中听到是小天狼星背叛了哈利的父母\n使其遭到了伏地魔的杀害\n后来小天狼星出现，点明了事情真相-他没有被判哈利的父母，而是小矮星彼得背叛后将一切罪名转移到了他的身上。。。。。。。。。。" << endl;
-	system("pause");
-	system("cls");
-	cout << "欢迎进入第三关~" << endl;
-	cout << "你目前所在的位置: " << mySorcerer->getRoom()->getName() << endl;
-	//cout << "据说与洗手间的桃金娘对话可以获得神秘的东西..." << endl;
+	map map("\t*********\t\t\t\t*********\t\t\t\t*********\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*别墅\t*\t<--------------->\t*礼堂\t*\t<--------------->\t*密室\t*\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********\t\t\t\t*********\n\t  /\\\t\t\t\t\t   /\\\t\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  \\/\t\t\t\t\t   ||\t\n\t*********\t\t\t\t   ||\n\t*\t*\t\t\t\t   ||\n\t*湖泊\t*====================================\n\t*\t*\n\t*********");
+	if (!ifNew) {
+		cout << "得知阿兹卡班罪犯小天狼星逃出监狱\n而哈利等人在去霍格莫德时无意中听到是小天狼星背叛了哈利的父母\n使其遭到了伏地魔的杀害\n后来小天狼星出现，点明了事情真相-他没有被判哈利的父母，而是小矮星彼得背叛后将一切罪名转移到了他的身上。。。。。。。。。。" << endl;
+		//背景故事
+		system("pause");
+		system("cls");
+		cout << "欢迎进入第三关~" << endl;
+	}
+	//人物设置
 	goodPerson Sirius("小天狼星", "我跟詹姆斯和莉莉在一起那么久，你却没有，是很残忍。...\n");
+	goodPerson Snape("斯内普", "事情远远没有你想象的那么简单。\n");
 	villa.addGoodPerson(Sirius);
 	badPerson pettigrew(100, 10, 35, "小矮星");
 	badPerson dementor(100, 10, 35, "摄魂怪");
 	villa.addBadPerson(pettigrew);
 	lakes.addBadPerson(dementor);
-	while (check) {
+	//使用pair绑定
+	pair<string, int> chamberWithNum("密室", 0);
+	pair<string, int> auditoriumWithNum("礼堂", 1);
+	pair<string, int> villaWithNum("别墅", 2);
+	pair<string, int> lakesWithNum("湖泊", 3);
+	//判断连通情况	link[A][B] = 1代表A->B是通的
+	//邻接矩阵
+	bool link[10][10];
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++)
+			link[i][j] = 0;
+	}
+	link[chamberWithNum.second][auditoriumWithNum.second] = 1;
+	link[auditoriumWithNum.second][chamberWithNum.second] = 1;
+	link[auditoriumWithNum.second][villaWithNum.second] = 1;
+	link[villaWithNum.second][auditoriumWithNum.second] = 1;
+	//link[auditoriumWithNum.second][lakesWithNum.second] = 0;
+	link[lakesWithNum.second][auditoriumWithNum.second] = 1;
+	link[lakesWithNum.second][villaWithNum.second] = 1;
+	link[villaWithNum.second][lakesWithNum.second] = 1;
+
+	if (ifNew) {
+		cout << "欢迎你再次进入游戏，继续开启第三关的征程。" << endl;
 		system("pause");
 		system("cls");
-		cout << "输入100可以查看当前自己的属性" << endl;
-		cout << "输入101可以查看或使用自己拥有的药品" << endl;
-		cout << "输入102可以查看自己目前已经拥有的魔法道具" << endl;
-		cout << "输入103可以进入关卡的店铺" << endl;
-		cout << "输入110可以保存当前进度" << endl;
-		cout << "输入111可以退出当前游戏" << endl;
+		fstream infile(mySorcerer->getName() + "State" + ".txt");
+		//药水初始化
+		int medicineNum = 0;
+		infile >> medicineNum;
+		string medicineName = " ";
+		int recoverValue = 0;
+		int medicinePirce = 0;
+		for (int i = 0; i < medicineNum; i++) {
+			infile >> medicineName >> recoverValue >> medicinePirce;
+			tempMedicine.setInformation(medicineName, recoverValue, medicinePirce);
+			medicine.push_back(tempMedicine);
+		}
+		//技能初始化
+		int skillNum = 0;
+		infile >> skillNum;
+		string skillName = " ";
+		int skillDamage = 0;
+		int skillPrice = 0;
+		for (int i = 0; i < skillNum; i++) {
+			infile >> skillName >> skillDamage >> skillPrice;
+			tempSkill.setValue(skillName, skillDamage, skillPrice);
+			skill.push_back(tempSkill);
+		}
+		//其它杂项初始化
+		infile >> ifKillPettigrew >> roomNum;
+		bool tempIsInRoom = 0;
+		infile >> tempIsInRoom;
+		chamber.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		auditorium.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		villa.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		lakes.setIfIn(tempIsInRoom);
+		if (roomNum == 0) {
+			mySorcerer->inRoom(&chamber);
+		}
+		else if (roomNum == 1) {
+			mySorcerer->inRoom(&auditorium);
+		}
+		else if (roomNum == 2) {
+			mySorcerer->inRoom(&villa);
+		}
+		else if (roomNum == 3) {
+			mySorcerer->inRoom(&lakes);
+		}
+	}
+	Shop shop(medicine, skill, "西皮士魔术用品店", medicine.size(), skill.size());
+
+	while (check) {
+		//如果在游戏中死亡
+		if (mySorcerer->getBloodValue() == 0) {
+			mySorcerer->afterDead();
+			system("pause");//格式化处理
+			system("cls");
+		}
+		system("pause");//格式化处理
+		system("cls");
+		//提示语输入
+		cout << "输入 查看属性 可以查看当前自己的属性" << endl;
+		cout << "输入 查用药品 可以查看或使用自己拥有的药品" << endl;
+		cout << "输入 查看道具 可以查看自己目前已经拥有的魔法道具" << endl;
+		cout << "输入 进入店铺 可以进入关卡的店铺" << endl;
+		cout << "输入 保存进度 可以保存当前进度" << endl;
+		cout << "输入 退出游戏 可以退出当前游戏" << endl;
 		cout << "你目前所在的位置为：" << mySorcerer->getRoom()->getName() << endl;
-		cout << "输入地图左上角的数字可以进入该地图" << endl;
+		cout << "输入地图上房间的名字可以进入该房间" << endl;
 		cout << "此关卡的地图：" << endl;
-		map3.showMap();
-		cout << "请输入数字选择:" << endl;
-		int op = 0;
-		int op1 = 0; //战斗时的选择
+		map.showMap();
+		cout << "请输入你的选择:" << endl;
+		string op = " ";
 		cin >> op;
-		switch (op)
-		{
-		case 100:
+		if (op == "查看属性") {
 			system("cls");
 			mySorcerer->showInformation();
-			break;
-		case 101:
+		}
+		else if (op == "查用药品") {
 			system("cls");
 			mySorcerer->showMedicine();
-			break;
-		case 102:
+		}
+		else if (op == "查看道具 ") {
 			system("cls");
 			mySorcerer->showMagicItem();
-			break;
-		case 103:
+		}
+		else if (op == "进入店铺") {
 			system("cls");
-			shop_G3.showShop(mySorcerer);
-			break;
-		case 110:
-			cout << "还未设置" << endl;
-			break;
-		case 111:
+			shop.showShop(mySorcerer);
+		}
+		else if (op == "保存进度") {
+			mySorcerer->setMyCheckPoint(3);
+			//文件处理
+			File myFile(mySorcerer->getName() + ".txt");
+			File checkPointFile(mySorcerer->getName() + "State" + ".txt");//保存该关卡的进度
+			ofstream tempFile;
+			ofstream stateFile;
+			//信息保存操作
+			//本身属性信息保存
+			tempFile.open(mySorcerer->getName() + ".txt");
+			tempFile << mySorcerer->getDisguiseValue() << " "
+				<< mySorcerer->getForceValue() << " "
+				<< mySorcerer->getDefenceValue() << " "
+				<< mySorcerer->getMagicValue() << " "
+				<< mySorcerer->getBloodValue() << " "
+				<< mySorcerer->getMoney() << " "
+				<< mySorcerer->getName() << endl;
+			tempFile << mySorcerer->getMagicitemNum() << " ";
+			for (int i = 0; i < mySorcerer->getMagicitemNum(); i++) {
+				tempFile << mySorcerer->getMagicitem()[i].getName() << " " << mySorcerer->getMagicitem()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getHorcruxNum() << " ";
+			for (int i = 0; i < mySorcerer->getHorcruxNum(); i++) {
+				tempFile << mySorcerer->getHorcrux()[i].getName() << " " << mySorcerer->getHorcrux()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getSkillNum() << " ";
+			for (int i = 0; i < mySorcerer->getSkillNum(); i++) {
+				tempFile << mySorcerer->getSkill()[i].getName() << " " << mySorcerer->getSkill()[i].getDamage() << endl;
+			}
+			tempFile << mySorcerer->getMedicineNum() << " ";
+			for (int i = 0; i < mySorcerer->getMedicineNum(); i++) {
+				tempFile << mySorcerer->getMedicine()[i].getName() << " " << mySorcerer->getMedicine()[i].getRecoverValue() << " " << mySorcerer->getMedicine()[i].getPrice() << endl;
+			}
+			tempFile << mySorcerer->getMyCheckpoint() << endl;
+			cout << "人物属性信息保存成功!" << endl;
+			//关卡信息保存
+			stateFile.open(mySorcerer->getName() + "State" + ".txt");
+			stateFile << shop.getMedicineNum() << " ";
+			for (int i = 0; i < shop.getMedicineNum(); i++) {
+				stateFile << shop.getMedicine()[i].getName() << " "
+					<< shop.getMedicine()[i].getRecoverValue() << " "
+					<< shop.getMedicine()[i].getPrice() << endl;
+			}
+			stateFile << shop.getSkillNum() << " ";
+			for (int i = 0; i < shop.getSkillNum(); i++) {
+				stateFile << shop.getSkill()[i].getName() << " "
+					<< shop.getSkill()[i].getDamage() << " "
+					<< shop.getSkill()[i].getPrice() << endl;
+			}
+			stateFile << ifKillPettigrew << " " << roomNum << endl;
+			//0密室 1礼堂 2别墅 3湖泊四个地图的进入情况
+			stateFile << chamber.getIfIn() << " "
+				<< auditorium.getIfIn() << " "
+				<< villa.getIfIn() << " "
+				<< lakes.getIfIn() << endl;
+			//	//店铺
+			mySorcerer->setMyCheckPoint(3);
+			cout << "该关卡状态信息保存成功！" << endl;
+			tempFile.close();
+			stateFile.close();
+		}
+		else if (op == "退出游戏") {
 			cout << "你已经结束该游戏。" << endl;
+			system("pause");
+			system("cls");
 			return -1;
 			break;
-		default:
-			cout << "操作失败！" << endl;
-			break;
-		case 0:
-			//密室
-			mySorcerer->inRoom(&chamber);
-			cout << "欢迎来到密室" << endl;
-			break;
-		case 1:
-			//礼堂
+		}
+		else if (op == "密室" && roomNum == chamberWithNum.second || op == "礼堂" && roomNum == auditoriumWithNum.second || op == "别墅" && roomNum == villaWithNum.second || op == "湖泊" && roomNum == lakesWithNum.second) {
+			system("cls");
+			cout << "你已经在该位置！" << endl;
+			//格式化操作	
+		}
+		else if (op == "礼堂" && link[roomNum][auditoriumWithNum.second]) {
+			roomNum = 1;
 			mySorcerer->inRoom(&auditorium);
 			system("cls");
 			cout << "欢迎来到 " << auditorium.getName() << endl;
 			if (auditorium.getIfIn()) {
 				cout << "欢迎您再次来到 " << auditorium.getName() << endl;
-				break;
 			}
-			//cout << "\n" << Moaning_Myrtle.getName() << "：" << Moaning_Myrtle.getSentence() << endl;
-			//cout << "在与" << Moaning_Myrtle.getName() << "进行完谈话之后， 发现自己拥有蛇语。" << endl;
-			/*mySorcerer->addSkill(Alohomora);
-			mySorcerer->increaseSkillNum();*/
-			auditorium.inRoom();
-			break;
-		case 2:
-			//别墅
-			mySorcerer->inRoom(&villa);
+			else {
+				cout << "\n" << Snape.getName() << "：" << Snape.getSentence() << endl;
+				cout << "在与" << Snape.getName() << "进行完谈话之后， 你发现这里有一个巨大的阴谋。" << endl;
+				auditorium.inRoom();
+			}
+		}
+		else if (op == "礼堂" && !link[roomNum][auditoriumWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达礼堂，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "别墅" && link[roomNum][villaWithNum.second]) {
+			roomNum = 2;
+			mySorcerer->inRoom(&auditorium);
 			system("cls");
 			cout << "欢迎来到 " << villa.getName() << endl;
 			if (villa.getIfIn()) {
@@ -713,9 +1099,10 @@ int Plot::init3(sorcerer * mySorcerer)
 			//与小矮星进行战斗
 			cout << "此时小矮星正准备逃跑，你是否选择与它进行战斗？" << endl;
 			cout << "1.是		2.否" << endl;
-			cin >> op1;
+			int op_pettigrew = 0;
+			cin >> op_pettigrew;
 			system("cls");
-			if (op1 == 1) {
+			if (op_pettigrew == 1) {
 				cout << "战斗已经开始！" << endl;
 				bool ifWin = 1;
 				ifWin = mySorcerer->battle(mySorcerer, pettigrew);
@@ -725,760 +1112,1551 @@ int Plot::init3(sorcerer * mySorcerer)
 					cout << "你通过战斗消耗了" << pettigrew.getName() << "的大部分力量。但是小天狼星逃到了湖泊......" << endl;
 					system("pause");
 					system("cls");
+					ifKillPettigrew = 1;
 				}
 				else {
 					cout << "你被小矮星击败，建议再购买点儿装备进行战斗。" << endl;
+					mySorcerer->setBlood(0);
+					//输出菜
+					cout << "\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\n\t\t   菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\n\t\t   菜\t\t   菜\t\t   菜\t\n\t\t    菜\t\t   菜\t\t  菜\t\n\t\t     菜\t\t   菜\t\t 菜\t\n\n\t\t\t\t   菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t\t   菜\n\t\t\t         菜菜菜\n\t\t\t       菜  菜  菜\n\t\t\t     菜    菜    菜\n\t\t\t   菜      菜      菜\n\t\t\t 菜        菜        菜\n\t\t       菜          菜          菜\n\t\t     菜            菜            菜\n\t\t   菜              菜              菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n" << endl;
+					system("pause");
+					system("cls");
+					mySorcerer->inRoom(&auditorium);
+					roomNum = auditoriumWithNum.second;
 				}
 			}
-			else if (op1 == 2) {
-				cout << "你已经逃离战斗。小矮星成功逃跑" << endl;
+			else if (op_pettigrew == 2) {
+				cout << "你已经逃离该房间。小矮星成功逃跑" << endl;
+				mySorcerer->inRoom(&auditorium);
 			}
 			else {
 				cout << "操作失败，你已退出该房间！" << endl;
+				mySorcerer->inRoom(&auditorium);
 			}
-
-			break;
-		case 3:
-			//湖泊
-			mySorcerer->inRoom(&lakes);
+		}
+		else if (op == "别墅" && !link[roomNum][villaWithNum.second]) {
 			system("cls");
-			cout << "欢迎来到 " << lakes.getName() << endl;
-			cout << "此时摄魂怪已经将小天狼星包围，你是否选择与它进行对话？" << endl;
-			cout << "1.是		2.否" << endl;
-			int op1 = 0;
-			cin >> op1;
+			cout << "你所在的当前位置无法直接到达别墅，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "湖泊" && link[roomNum][lakesWithNum.second]) {
 			system("cls");
-			if (op1 == 1) {
-				cout << "战斗已经开始！" << endl;
-				bool ifWin = 1;
-				ifWin = mySorcerer->battle(mySorcerer, dementor);
-				if (ifWin) {
-					system("pause");
-					system("cls");
-					cout << "你通过战斗击退了" << dementor.getName() << "。小天狼星成功逃离......" << endl;
-					system("pause");
-					system("cls");
+			if (ifKillPettigrew) {
+				roomNum = 3;
+				mySorcerer->inRoom(&lakes);
+				cout << "你进入了湖泊。" << endl;
+				cout << "欢迎来到湖泊~" << endl;
+				cout << "此时摄魂怪正在袭击小天狼星，你是否选择与它进行战斗？" << endl;
+				cout << "1.是		2.否" << endl;
+				int op_dementor = 0;
+				cin >> op_dementor;
+				system("cls");
+				if (op_dementor == 1) {
+					bool ifWin = 0;
+					cout << "战斗开始，你已进入战斗模式..." << endl;
+					ifWin = mySorcerer->battle(mySorcerer, dementor);
+					if (ifWin) {
+						cout << "恭喜你成功通过第三关并获得了";
+						check = 0;
+						system("pause");
+						system("cls");
+					}
+					else {
+						mySorcerer->inRoom(&auditorium);
+						mySorcerer->setBlood(0);
+						//输出菜
+						cout << "\t\t\t   *\t\t     *\n\t\t\t   *\t\t     *\n\t\t\t   *\t\t     *\n\t\t*****************************************\n\t\t\t   *\t\t     *\n\t\t\t   *\t\t     *\n\n\t\t   ***********************************\n\n\t\t   *\t\t   *\t\t   *\t\n\t\t    *\t\t   *\t\t  *\t\n\t\t     *\t\t   *\t\t *\t\n\n\t\t\t\t   *\n\t\t*****************************************\n\t\t\t\t   *\n\t\t\t          ***\n\t\t\t        *  *  *\n\t\t\t      *    *    *\n\t\t\t    *      *      *\n\t\t\t  *        *        *\n\t\t\t*          *          *\n\t\t      *            *            *\n\t\t    *              *              *\n\t\t\t\t   *\n\t\t\t\t   *\n\t\t\t\t   *\n" << endl;
+						system("pause");
+						system("cls");
+						roomNum = 1;
+					}
+				}
+				else if (op_dementor == 2) {
+					cout << "你已经逃离战斗。" << endl;
+					mySorcerer->inRoom(&auditorium);
+					roomNum = 1;
 				}
 				else {
-					cout << "你被摄魂怪击败，建议再购买点儿装备进行战斗。" << endl;
+					cout << "操作失败，你已退出该房间！" << endl;
+					mySorcerer->inRoom(&auditorium);
+					roomNum = 1;
 				}
 			}
-			else if (op1 == 2) {
-				cout << "你已经逃离战斗。小矮星成功逃跑" << endl;
-			}
 			else {
-				cout << "操作失败，你已退出该房间！" << endl;
+				cout << "由于你没有击退小矮星，无法进入湖泊" << endl;
 			}
-			break;
+		}
+		else if (op == "湖泊" && !link[roomNum][lakesWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达湖泊，请仔细观察地图！" << endl;
+			//格式化操作	
+		}
+		else if (op == "密室" && link[roomNum][chamberWithNum.second]) {
+			system("cls");
+			cout << "欢迎来到密室~" << endl;
+			roomNum = 0;
+			mySorcerer->inRoom(&chamber);
+		}
+		else if (op == "密室" && !link[roomNum][chamberWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达密室，请仔细观察地图！" << endl;
+			//格式化操作	
+		}
+		else {
+			system("cls");
+			cout << "操作失败！" << endl;
+			//格式化操作	
 		}
 	}
 	return 1;
 }
 
-int Plot::init4(sorcerer *mySorcerer) {
-	vector<Medicine> medicine_G4;
+int Plot::init4(sorcerer *mySorcerer, int myCheckPoint, bool ifNew) {
+	//本关剧情格式化记录
+	//小药水数目 中药水数目 大药水数目 技能 ifKillKerberos roomNum 0.礼堂 1.迷宫 2.坟墓 3大厅 4办公室四个地图的进入情况
+
+	//药水设置 1大2中3小
+	//药水数目需要进行一个记录 记录的格式为 X X X分别指小中大
+	vector<Medicine> medicine;
+	Medicine tempMedicine(" ", 0, 0);
 	Medicine medicineTempSmall("小药水", 20, 400);
-	medicine_G4.push_back(medicineTempSmall);
-	medicine_G4.push_back(medicineTempSmall);
 	Medicine medicineTempMiddle("中药水", 40, 800);
-	medicine_G4.push_back(medicineTempMiddle);
-	medicine_G4.push_back(medicineTempMiddle);
 	Medicine medicineTempLarge("大药水", 60, 1200);
-	medicine_G4.push_back(medicineTempLarge);
-	vector<Skill> a;
-	Shop shop_G4(medicine_G4, a, "奇幻空间魔术用品店", 5);
-	//商店里面有守护神咒可以买不买很难通关
+	if (!ifNew) {
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempLarge);;
+	}
+	//超市里技能设置
+	//咒语：ExpectoPatronum 30 1300	
+	vector<Skill> skill;
+	Skill tempSkill(" ", 0, 0);
+	Skill ExpectoPatronum("ExpectoPatronum", 15, 600);
+	if (myCheckPoint != 4) {
+		skill.push_back(ExpectoPatronum);
+	}
+	//一些判断
 	bool check = 1;
-
-	Magicitem The_goblet_of_fire("火焰杯", 100);
-
-	room hall("大厅");
+	int trueanswer = 0;
+	bool ifPassMaze = 0;
+	//本关地点设置 0.礼堂 1.迷宫 2.坟墓 3大厅 4办公室
 	room auditorium("礼堂");
-	room maze("迷宫");	//1迷宫 2坟墓
+	room maze("迷宫");
 	room grave("坟墓");
+	room hall("大厅");
 	room office("办公室");
+	int roomNum = 0; //储存当前所在的房间号
+	//开局先到达一个地点
 	mySorcerer->inRoom(&auditorium);
-	//Magicitem phoenix("凤凰", 2);
-	map map4("\t0.*******\t\t\t\t1.*******\t\t\t\t2.*******\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*礼堂\t*\t<--------------->\t*迷宫\t*\t---------------->\t*坟墓\t*\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********\t\t\t\t*********\n\t\t\t\t\t\t\t\t\t\t\t   ||\n \t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   \\/\n\t\t\t\t\t\t\t\t\t\t\t3.*******\n\t\t\t\t\t\t\t\t\t\t\t*\t*\n\t\t\t\t\t\t\t\t\t\t\t*大厅\t*\n\t\t\t\t\t\t\t\t\t\t\t*\t*\n\t\t\t\t\t\t\t\t\t\t\t*********");
-	cout << "哈利没有报名参加“三强争霸赛”却意外地成为了三强争霸赛的第四名勇士\n没想到更大的阴谋正在后面等着他。。。。。。。。" << endl;
-	system("pause");
-	system("cls");
-	cout << "欢迎进入第四关~" << endl;
-	cout << "你目前所在的位置: " << mySorcerer->getRoom()->getName() << endl;
-	//cout << "据说与洗手间的桃金娘对话可以获得神秘的东西..." << endl;
-	//goodPerson Sirius("小天狼星", "我跟詹姆斯和莉莉在一起那么久，你却没有，是很残忍。...\n");
-	//villa.addGoodPerson(Sirius);
+	map map("\t*********\t\t\t\t*********\t\t\t\t*********\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*礼堂\t*\t<--------------->\t*迷宫\t*\t---------------->\t*坟墓\t*\n\t*\t*\t\t\t\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********\t\t\t\t*********\n\t\t\t\t\t\t\t\t\t\t\t   ||\n \t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   \\/\n\t\t\t\t\t\t\t\t\t\t\t*********\n\t\t\t\t\t\t\t\t\t\t\t*\t*\n\t\t\t\t\t\t\t\t\t\t\t*大厅\t*\n\t\t\t\t\t\t\t\t\t\t\t*\t*\n\t\t\t\t\t\t\t\t\t\t\t*********\n\t\t\t\t\t\t\t\t\t\t\t   /\\\n \t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   ||\n\t\t\t\t\t\t\t\t\t\t\t   \\/\n\t\t\t\t\t\t\t\t\t\t\t*********\n\t\t\t\t\t\t\t\t\t\t\t*\t*\n\t\t\t\t\t\t\t\t\t\t\t*办公室\t*\n\t\t\t\t\t\t\t\t\t\t\t*\t*\n\t\t\t\t\t\t\t\t\t\t\t*********");
+		//一些装备
+	Magicitem The_goblet_of_fire("火焰杯", 100);
+	if (!ifNew) {
+		//开局背景故事
+		cout << "哈利没有报名参加“三强争霸赛”却意外地成为了三强争霸赛的第四名勇士\n没想到更大的阴谋正在后面等着他。。。。。。。。" << endl;
+		system("pause");
+		system("cls");
+		cout << "欢迎进入第四关~" << endl;
+	}
+	//人物设置
 	badPerson voldemort(100, 10, 35, "伏地魔");
 	badPerson Little_buddy(100, 10, 15, "小巴蒂");
 	grave.addBadPerson(voldemort);
 	office.addBadPerson(Little_buddy);
-	int trueanswer = 0;
-	while (check) {
+	//使用pair绑定
+	pair<string, int> auditoriumWithNum("礼堂", 0);
+	pair<string, int> mazeWithNum("迷宫", 1);
+	pair<string, int> graveWithNum("坟墓", 2);
+	pair<string, int> hallWithNum("大厅", 3);
+	pair<string, int> officeWithNum("办公室", 4);
+	//判断连通情况	link[A][B] = 1代表A->B是通的
+	//邻接矩阵
+	bool link[10][10];
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++)
+			link[i][j] = 0;
+	}
+	link[auditoriumWithNum.second][mazeWithNum.second] = 1;
+	link[mazeWithNum.second][auditoriumWithNum.second] = 1;
+	link[mazeWithNum.second][graveWithNum.second] = 1;
+	link[graveWithNum.second][hallWithNum.second] = 1;
+	link[hallWithNum.second][officeWithNum.second] = 1;
+	link[officeWithNum.second][hallWithNum.second] = 1;
+
+	if (ifNew) {
+		cout << "欢迎你再次进入游戏，继续开启第四关的征程。" << endl;
 		system("pause");
 		system("cls");
-		cout << "输入100可以查看当前自己的属性" << endl;
-		cout << "输入101可以查看或使用自己拥有的药品" << endl;
-		cout << "输入102可以查看自己目前已经拥有的魔法道具" << endl;
-		cout << "输入103可以进入关卡的店铺" << endl;
-		cout << "输入110可以保存当前进度" << endl;
-		cout << "输入111可以退出当前游戏" << endl;
+		fstream infile(mySorcerer->getName() + "State" + ".txt");
+		//药水初始化
+		int medicineNum = 0;
+		infile >> medicineNum;
+		string medicineName = " ";
+		int recoverValue = 0;
+		int medicinePirce = 0;
+		for (int i = 0; i < medicineNum; i++) {
+			infile >> medicineName >> recoverValue >> medicinePirce;
+			tempMedicine.setInformation(medicineName, recoverValue, medicinePirce);
+			medicine.push_back(tempMedicine);
+		}
+		//技能初始化
+		int skillNum = 0;
+		infile >> skillNum;
+		string skillName = " ";
+		int skillDamage = 0;
+		int skillPrice = 0;
+		for (int i = 0; i < skillNum; i++) {
+			infile >> skillName >> skillDamage >> skillPrice;
+			tempSkill.setValue(skillName, skillDamage, skillPrice);
+			skill.push_back(tempSkill);
+		}
+		//其它杂项初始化
+		infile >> ifPassMaze >> roomNum;
+		bool tempIsInRoom = 0;
+		infile >> tempIsInRoom;
+		hall.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		auditorium.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		maze.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		grave.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		office.setIfIn(tempIsInRoom);
+		if (roomNum == 0) {
+			mySorcerer->inRoom(&hall);
+		}
+		else if (roomNum == 1) {
+			mySorcerer->inRoom(&auditorium);
+		}
+		else if (roomNum == 2) {
+			mySorcerer->inRoom(&maze);
+		}
+		else if (roomNum == 3) {
+			mySorcerer->inRoom(&hall);
+		}
+		else if (roomNum == 4) {
+			mySorcerer->inRoom(&office);
+		}
+	}
+	Shop shop(medicine, skill, "西皮士魔术用品店", medicine.size(), skill.size());
+	while (check) {
+		//如果在游戏中死亡
+		if (mySorcerer->getBloodValue() == 0) {
+			mySorcerer->afterDead();
+			system("pause");//格式化处理
+			system("cls");
+		}
+		system("pause");//格式化处理
+		system("cls");
+		//提示语输入
+		cout << "输入 查看属性 可以查看当前自己的属性" << endl;
+		cout << "输入 查用药品 可以查看或使用自己拥有的药品" << endl;
+		cout << "输入 查看道具 可以查看自己目前已经拥有的魔法道具" << endl;
+		cout << "输入 进入店铺 可以进入关卡的店铺" << endl;
+		cout << "输入 保存进度 可以保存当前进度" << endl;
+		cout << "输入 退出游戏 可以退出当前游戏" << endl;
 		cout << "你目前所在的位置为：" << mySorcerer->getRoom()->getName() << endl;
-		cout << "输入地图左上角的数字可以进入该地图" << endl;
+		cout << "输入地图上房间的名字可以进入该房间" << endl;
 		cout << "此关卡的地图：" << endl;
-		map4.showMap();
-		cout << "请输入数字选择:" << endl;
-		int op = 0;
-		int op2 = 0;//办公室那儿的判断
-		int op3 = 0;//逃跑时的判断
+		map.showMap();
+		cout << "请输入你的选择:" << endl;
+		string op = " ";
 		cin >> op;
-		switch (op)
-		{
-		case 100:
+		if (op == "查看属性") {
 			system("cls");
 			mySorcerer->showInformation();
-			break;
-		case 101:
+		}
+		else if (op == "查用药品") {
 			system("cls");
 			mySorcerer->showMedicine();
-			break;
-		case 102:
+		}
+		else if (op == "查看道具 ") {
 			system("cls");
 			mySorcerer->showMagicItem();
-			break;
-		case 103:
+		}
+		else if (op == "进入店铺") {
 			system("cls");
-			shop_G4.showShop(mySorcerer);
-			break;
-		case 110:
-			cout << "还未设置" << endl;
-			break;
-		case 111:
+			shop.showShop(mySorcerer);
+		}
+		else if (op == "保存进度") {
+			mySorcerer->setMyCheckPoint(4);
+			//文件处理
+			File myFile(mySorcerer->getName() + ".txt");
+			File checkPointFile(mySorcerer->getName() + "State" + ".txt");//保存该关卡的进度
+			ofstream tempFile;
+			ofstream stateFile;
+			//信息保存操作
+			//本身属性信息保存
+			tempFile.open(mySorcerer->getName() + ".txt");
+			tempFile << mySorcerer->getDisguiseValue() << " "
+				<< mySorcerer->getForceValue() << " "
+				<< mySorcerer->getDefenceValue() << " "
+				<< mySorcerer->getMagicValue() << " "
+				<< mySorcerer->getBloodValue() << " "
+				<< mySorcerer->getMoney() << " "
+				<< mySorcerer->getName() << endl;
+			tempFile << mySorcerer->getMagicitemNum() << " ";
+			for (int i = 0; i < mySorcerer->getMagicitemNum(); i++) {
+				tempFile << mySorcerer->getMagicitem()[i].getName() << " " << mySorcerer->getMagicitem()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getHorcruxNum() << " ";
+			for (int i = 0; i < mySorcerer->getHorcruxNum(); i++) {
+				tempFile << mySorcerer->getHorcrux()[i].getName() << " " << mySorcerer->getHorcrux()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getSkillNum() << " ";
+			for (int i = 0; i < mySorcerer->getSkillNum(); i++) {
+				tempFile << mySorcerer->getSkill()[i].getName() << " " << mySorcerer->getSkill()[i].getDamage() << endl;
+			}
+			tempFile << mySorcerer->getMedicineNum() << " ";
+			for (int i = 0; i < mySorcerer->getMedicineNum(); i++) {
+				tempFile << mySorcerer->getMedicine()[i].getName() << " " << mySorcerer->getMedicine()[i].getRecoverValue() << " " << mySorcerer->getMedicine()[i].getPrice() << endl;
+			}
+			tempFile << mySorcerer->getMyCheckpoint() << endl;
+			cout << "人物属性信息保存成功!" << endl;
+			//关卡信息保存
+			stateFile.open(mySorcerer->getName() + "State" + ".txt");
+			stateFile << shop.getMedicineNum() << " ";
+			for (int i = 0; i < shop.getMedicineNum(); i++) {
+				stateFile << shop.getMedicine()[i].getName() << " "
+					<< shop.getMedicine()[i].getRecoverValue() << " "
+					<< shop.getMedicine()[i].getPrice() << endl;
+			}
+			stateFile << shop.getSkillNum() << " ";
+			for (int i = 0; i < shop.getSkillNum(); i++) {
+				stateFile << shop.getSkill()[i].getName() << " "
+					<< shop.getSkill()[i].getDamage() << " "
+					<< shop.getSkill()[i].getPrice() << endl;
+			}
+			stateFile << ifPassMaze << " " << roomNum << endl;
+			//0.礼堂 1.迷宫 2.坟墓 3大厅 4办公室
+			stateFile << auditorium.getIfIn() << " "
+				<< maze.getIfIn() << " "
+				<< grave.getIfIn() << " "
+				<< hall.getIfIn() << " "
+				<< office.getIfIn() << endl;
+			//	//店铺
+			mySorcerer->setMyCheckPoint(4);
+			cout << "该关卡状态信息保存成功！" << endl;
+			tempFile.close();
+			stateFile.close();
+		}
+		else if (op == "退出游戏") {
 			cout << "你已经结束该游戏。" << endl;
+			system("pause");
+			system("cls");
 			return -1;
 			break;
-		default:
-			cout << "操作失败！" << endl;
-			break;
-		case 0:
-			mySorcerer->inRoom(&auditorium);
-			cout << "欢迎来到 " << auditorium.getName() << endl;
-			break;
-		case 1:
-			//迷宫
+		}
+		else if (op == "礼堂" && roomNum == auditoriumWithNum.second || op == "迷宫" && roomNum == mazeWithNum.second || op == "坟墓" && roomNum == graveWithNum.second || op == "大厅" && roomNum == hallWithNum.second || op == "办公室" && roomNum == officeWithNum.second) {
 			system("cls");
+			cout << "你已经在该位置！" << endl;
+			//格式化操作	
+		}
+		else if (op == "迷宫" && link[roomNum][mazeWithNum.second]) {
+			roomNum = 1;
 			mySorcerer->inRoom(&maze);
-
-			char indicatation;
-			cout << "通过回答一些小问题你可以通过迷宫。" << endl;
-			system("pause");
-			while (trueanswer < 3) {
+			system("cls");
+			cout << "欢迎来到 " << maze.getName() << endl;
+			if (maze.getIfIn()) {
+				cout << "欢迎您再次来到 " << maze.getName() << endl;
+				cout << "火焰杯是去到一个地方的钥匙" << endl;
+			}
+			else {
+				char indicatation;
+				cout << "通过回答一些小问题你可以通过迷宫。" << endl;
+				system("pause");
 				trueanswer = 0;
 				cout << "1、哈利波特的生日是几月几日？" << endl;
 				cout << "A.8.31    B. 7.31    C.7.11" << endl;
 				cin >> indicatation;
-				switch (indicatation) {
-				case 'B': {
+				if (indicatation == 'B') {
 					cout << "回答正确" << endl;
-					cout << "2.咒语Imperio是什么意思？" << endl;
-					cout << "A. 魂魄出窍              B. 钻心剜骨              C. 黑魔标记" << endl;
-					cin >> indicatation;
-					switch (indicatation) {
-					case 'A': {
-						cout << "回答正确" << endl;
-						cout << "3. Bezoar 毛粪石有什么作用？" << endl;
-						cout << "A. 用来解毒 B.对难缠的面疱有特别的疗效  C.在水里可以呼吸" << endl;
-						cin >> indicatation;
-						switch (indicatation) {
-						case 'A': {
-							cout << "回答正确" << endl;
-							trueanswer = trueanswer + 1;
-							break;
-						}
-						default: {
-							cout << "回答错误" << endl;
-							trueanswer = trueanswer;
-							break;
-						}
-						}
-						trueanswer = trueanswer + 1;
-						break;
-					}
-					default: {
-						cout << "回答错误" << endl;
-						trueanswer = trueanswer;
-						break;
-					}
-					}
-					trueanswer = trueanswer + 1; break; }
-				default: {
-					cout << "回答错误" << endl;
-					cout << "2.咒语Imperio是什么意思？" << endl;
-					cout << "A. 魂魄出窍              B. 钻心剜骨              C. 黑魔标记" << endl;
-					cin >> indicatation;
-					switch (indicatation) {
-					case 'A': {
-						cout << "回答正确" << endl;
-						cout << "3. Bezoar 毛粪石有什么作用？" << endl;
-						cout << "A. 用来解毒 B.对难缠的面疱有特别的疗效  C.在水里可以呼吸" << endl;
-						cin >> indicatation;
-						switch (indicatation) {
-						case 'A': {
-							cout << "回答正确" << endl;
-							trueanswer = trueanswer + 1;
-							break;
-						}
-						default: {
-							cout << "回答错误" << endl;
-							trueanswer = trueanswer;
-							break;
-						}
-						}
-						trueanswer = trueanswer + 1;
-						break;
-					}
-					default: {
-						cout << "回答错误" << endl;
-						cout << "3. Bezoar 毛粪石有什么作用？" << endl;
-						cout << "A. 用来解毒 B.对难缠的面疱有特别的疗效  C.在水里可以呼吸" << endl;
-						cin >> indicatation;
-						switch (indicatation) {
-						case 'A': {
-							cout << "回答正确" << endl;
-							trueanswer = trueanswer + 1;
-							break;
-						}
-						default: {
-							cout << "回答错误" << endl;
-							trueanswer = trueanswer;
-							break;
-						}
-						}
-						trueanswer = trueanswer + 1;
-						break;
-					}
-							 trueanswer = trueanswer;
-							 break;
-					}
+					trueanswer++;
 				}
-						 trueanswer = trueanswer; break;
+				else {
+					cout << "回答错误" << endl;
+				}
+				cout << "2.咒语Imperio是什么意思？" << endl;
+				cout << "A. 魂魄出窍              B. 钻心剜骨              C. 黑魔标记" << endl;
+				cin >> indicatation;
+				if (indicatation == 'A') {
+					cout << "回答正确" << endl;
+					trueanswer++;
+				}
+				else {
+					cout << "回答错误" << endl;
+				}
+				cout << "3. Bezoar 毛粪石有什么作用？" << endl;
+				cout << "A. 用来解毒 B.对难缠的面疱有特别的疗效  C.在水里可以呼吸" << endl;
+				cin >> indicatation;
+				if (indicatation == 'A') {
+					cout << "回答正确" << endl;
+					trueanswer++;
+				}
+				else {
+					cout << "回答错误" << endl;
+				}
+				if (trueanswer == 3) {
+					cout << "恭喜你通过迷宫，获得了火焰杯。" << endl;
+					mySorcerer->addMagicitem(The_goblet_of_fire);
+					maze.inRoom();
+					ifPassMaze = 1;
+				}
+				else {
+					cout << "很遗憾你没有通过迷宫，被迫返回至礼堂。" << endl;
+					mySorcerer->inRoom(&auditorium);
+					roomNum = 0;
+					//0.礼堂 1.迷宫 2.坟墓 3大厅 4办公室
 				}
 			}
-
-			cout << "你通过神奇的火焰杯，来到了一个神奇的地方" << endl;
-			system("pause");
+		}
+		else if (op == "迷宫" && !link[roomNum][mazeWithNum.second]) {
 			system("cls");
-			mySorcerer->inRoom(&grave);
-			cout << "欢迎来到 " << grave.getName() << endl;
-			//麻烦加一段文字，表明伏地魔复活。
-
-
-			cout << "是否选择与伏地魔进行战斗:" << endl;
-			cout << "1.是		2.否" << endl;
-			cin >> op3;
-			if (op3 == 1) {
-				cout << "战斗过程中，发现实力差距较大，你使用火焰杯顺利逃脱。" << endl;
+			cout << "你所在的当前位置无法直接到达迷宫，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "坟墓" && link[roomNum][graveWithNum.second]) {
+			if (ifPassMaze) {
+				roomNum = 2;
+				mySorcerer->inRoom(&grave);
+				system("cls");
+				cout << "你通过神奇的火焰杯，来到了一个神奇的地方" << endl;
+				if (grave.getIfIn()) {
+					cout << "欢迎您再次来到 " << grave.getName() << endl;
+					cout << "伏地魔他们已经离开。。。。" << endl;
+				}
+				else {
+					system("pause");
+					system("cls");
+					mySorcerer->inRoom(&grave);
+					cout << "欢迎来到 " << grave.getName() << endl;
+					cout << "那个不能说出名字的人复活了！！！" << endl;
+					system("pause");
+					system("cls");
+					cout << "是否选择与伏地魔进行战斗:" << endl;
+					cout << "1.是		2.否" << endl;
+					int op_grave = 0;
+					cin >> op_grave;
+					if (op_grave == 1) {
+						cout << "战斗过程中，发现实力差距较大，你使用火焰杯顺利逃脱。" << endl;
+					}
+					else {
+						cout << "你使用火焰杯顺利逃脱。" << endl;
+					}
+					system("pause");
+					system("cls");
+					mySorcerer->inRoom(&hall);
+					roomNum = 3;
+						//0.礼堂 1.迷宫 2.坟墓 3大厅 4办公室
+				}
 			}
 			else {
-				cout << "你使用火焰杯顺利逃脱。" << endl;
+				cout << "你缺少进入坟墓的钥匙。" << endl;
 			}
-			system("pause");
+		}
+		else if (op == "坟墓" && !link[roomNum][graveWithNum.second]) {
 			system("cls");
+			cout << "你所在的当前位置无法直接到达迷宫，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "大厅" && link[roomNum][hallWithNum.second]) {
+			roomNum = 3;
 			mySorcerer->inRoom(&hall);
-		
-			break;
-		case 4:
-			mySorcerer->inRoom(&office);
+			system("cls");
+			cout << "欢迎来到大厅。" << endl;
+		}
+		else if (op == "大厅" && !link[roomNum][graveWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达大厅，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "办公室" && link[roomNum][officeWithNum.second]) {
+			roomNum = 4;
+			mySorcerer->inRoom(&hall);
+			system("cls");
 			cout << "欢迎来到" << office.getName() << endl;
 			cout << "原来小巴蒂是食司徒!!!" << endl;
 			cout << "你是否选择与它进行战斗？" << endl;
 			cout << "1.是		2.否" << endl;
-			cin >> op2;
+			int op_office = 0;
+			cin >> op_office;
 			system("cls");
-			if (op2 == 1) {
+			if (op_office == 1) {
 				bool ifWin = 0;
 				cout << "战斗开始，你已进入战斗模式..." << endl;
 				ifWin = mySorcerer->battle(mySorcerer, Little_buddy);
 				if (ifWin) {
 					cout << "恭喜你成功通过第四关关并获得了";
 					check = 0;
+					system("pause");
+					system("cls");
 				}
 				else {
-					cout << "caicaicai" << endl;
+					mySorcerer->setBlood(0);
+					//输出菜
+					cout << "\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\n\t\t   菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\n\t\t   菜\t\t   菜\t\t   菜\t\n\t\t    菜\t\t   菜\t\t  菜\t\n\t\t     菜\t\t   菜\t\t 菜\t\n\n\t\t\t\t   菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t\t   菜\n\t\t\t         菜菜菜\n\t\t\t       菜  菜  菜\n\t\t\t     菜    菜    菜\n\t\t\t   菜      菜      菜\n\t\t\t 菜        菜        菜\n\t\t       菜          菜          菜\n\t\t     菜            菜            菜\n\t\t   菜              菜              菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n" << endl;
+					system("pause");
+					system("cls");
+					mySorcerer->inRoom(&hall);
+					roomNum = 3;
+					//0.礼堂 1.迷宫 2.坟墓 3大厅 4办公室
 				}
 			}
-			else if (op2 == 2) {
+			else if (op_office == 2) {
 				cout << "你已经逃离战斗。" << endl;
 			}
 			else {
 				cout << "操作失败，你已退出该房间！" << endl;
 				mySorcerer->inRoom(&hall);
+				roomNum = 3;
+				//0.礼堂 1.迷宫 2.坟墓 3大厅 4办公室
 			}
 		}
+		else if (op == "办公室" && !link[roomNum][officeWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达办公室，请仔细观察地图！" << endl;
+			//格式化操作
+		}
 	}
-	cout << "恭喜你成功通过第四关。" << endl;
-	system("pause");
-	system("cls");
 	return 1;
 }
 
 
-int Plot::init5(sorcerer *mySorcerer) {
-
+int Plot::init5(sorcerer *mySorcerer, int myCheckPoint, bool ifNew) {
+	//本关剧情格式化记录
+	//小药水数目 中药水数目 大药水数目 技能 ifKillKerberos roomNum 0大厅 1校长室 2阁楼 3地穴四个地图的进入情况
+	//bool end = 0;	//
+	//开局送的礼物
 	//药水配置待改
-	vector<Medicine> medicine_G5;
+	//药水设置 1大2中2小
+	//药水数目需要进行一个记录 记录的格式为 X X X分别指小中大
+	vector<Medicine> medicine;
+	Medicine tempMedicine(" ", 0, 0);
 	Medicine medicineTempSmall("小药水", 20, 400);
-	medicine_G5.push_back(medicineTempSmall);
-	medicine_G5.push_back(medicineTempSmall);
 	Medicine medicineTempMiddle("中药水", 40, 800);
-	medicine_G5.push_back(medicineTempMiddle);
-	medicine_G5.push_back(medicineTempMiddle);
 	Medicine medicineTempLarge("大药水", 60, 1200);
-	medicine_G5.push_back(medicineTempLarge);
-	vector<Skill> a;
-	Shop shop_G5(medicine_G5, a, "奇幻空间魔术用品店", 5);
+	if (!ifNew) {
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempLarge);
+	}
+	//超市里技能设置
+	//咒语：Epliskey 40 1500
+	vector<Skill> skill;
+	Skill tempSkill(" ", 0, 0);
+	Skill Epliskey("Epliskey", 40, 1500);
+	if (myCheckPoint != 5) {
+		skill.push_back(Epliskey);
+	}
+	//一些判断
 	bool check = 1;
-	room Room_of_requirement("有求必应屋");
-	room bathroom("洗手间");
+
+	//本关地点设置 0.大厅 1.魔法部 2.有求必应屋 3.神龙阁
 	room hall("大厅");
 	room The_ministry_of_magic("魔法部");
+	room Room_of_requirement("有求必应屋");
 	room The_dragon_pavilion("神龙阁");
-	map map5("\t1.*******\n\t*\t*\n\t*魔法部\t*\n\t*\t*\n\t*********\n\t   /\\\n\t   ||\n\t   ||\n\t   ||\n\t   \\/\n\t0.*******\t\t\t\t2.***************\n\t*\t*\t\t\t\t*\t\t*\n\t*大厅\t*<----------------------------->*有求必应屋\t*\n\t*\t*\t\t\t\t*\t\t*\n\t*********\t\t\t\t*****************\n\t   /\\\n\t   ||\n\t   ||\n\t   ||\n\t   ||\n\t   \\/\n\t3.*******\n\t*\t*\n\t*神龙阁\t*\n\t*\t*\n\t*********");
-	cout << "没有人相信伏地魔回来，\n哈利被认为是个骗子，\n只有他的朋友们相信并支持着他。\n哈利于伙伴们组建邓不利多军来抵抗，\n但到后来他中了伏地魔的诡计，\n与朋友们来到魔法部解救教父小天狼星。。。。。。。" << endl;
-	system("pause");
-	system("cls");
+	int roomNum = 0; //储存当前所在的房间号
+	//开局先到达一个地点
 	mySorcerer->inRoom(&hall);
-	cout << "欢迎进入第五关~" << endl;
-	cout << "你目前所在的位置: " << mySorcerer->getRoom()->getName() << endl;
-
-	goodPerson Sirius("小天狼星", "我跟詹姆斯和莉莉在一起那么久，你却没有，是很残忍。...\n");
+	roomNum = 0;
+	map map("\t*********\n\t*\t*\n\t*魔法部\t*\n\t*\t*\n\t*********\n\t   /\\\n\t   ||\n\t   ||\n\t   ||\n\t   \\/\n\t*********\t\t\t\t*****************\n\t*\t*\t\t\t\t*\t\t*\n\t*大厅\t*<----------------------------->*有求必应屋\t*\n\t*\t*\t\t\t\t*\t\t*\n\t*********\t\t\t\t*****************\n\t   /\\\n\t   ||\n\t   ||\n\t   ||\n\t   ||\n\t   \\/\n\t*********\n\t*\t*\n\t*神龙阁\t*\n\t*\t*\n\t*********");
+	if (!ifNew) {
+		//背景故事
+		cout << "没有人相信伏地魔回来，\n哈利被认为是个骗子，\n只有他的朋友们相信并支持着他。\n哈利于伙伴们组建邓不利多军来抵抗，\n但到后来他中了伏地魔的诡计，\n与朋友们来到魔法部解救教父小天狼星。。。。。。。" << endl;
+		system("pause");
+		system("cls");
+		cout << "欢迎进入第五关~" << endl;
+	}
+	//人物设置
+	goodPerson Sirius("小天狼星", "我必须来送送你，对吧。...\n");
 	badPerson Lucius(100, 10, 35, "卢修斯");
 	The_ministry_of_magic.addGoodPerson(Sirius);
-
 	badPerson Fire_dragon(100, 10, 35, "火龙");
 	badPerson Earth_dragon(100, 10, 35, "土龙");
 	badPerson Water_dragon(100, 10, 35, "水龙");
 	badPerson Wind_dragon(100, 10, 35, "风龙");
 	badPerson Far_from_cologne(100, 10, 35, "远古龙");
 	//在神龙阁可以 挑战木龙，土龙，火龙，风龙和远古龙
-
-	The_dragon_pavilion.addBadPerson(Fire_dragon);
-	The_dragon_pavilion.addBadPerson(Earth_dragon);
-	The_dragon_pavilion.addBadPerson(Water_dragon);
-	The_dragon_pavilion.addBadPerson(Far_from_cologne);
-	while (check) {
+	if (!ifNew) {
+		The_dragon_pavilion.addBadPerson(Fire_dragon);
+		The_dragon_pavilion.addBadPerson(Earth_dragon);
+		The_dragon_pavilion.addBadPerson(Water_dragon);
+		The_dragon_pavilion.addBadPerson(Wind_dragon);
+		The_dragon_pavilion.addBadPerson(Far_from_cologne);
+	}
+	//使用pair绑定
+	pair<string, int> hallWithNum("大厅", 0);
+	pair<string, int> The_ministry_of_magicWithNum("魔法部", 1);
+	pair<string, int> Room_of_requirementWithNum("有求必应屋", 2);
+	pair<string, int> The_dragon_pavilionWithNum("神龙阁", 3);
+	//判断连通情况	link[A][B] = 1代表A->B是通的
+	//邻接矩阵
+	bool link[10][10];
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++)
+			link[i][j] = 0;
+	}
+	link[hallWithNum.second][The_ministry_of_magicWithNum.second] = 1;
+	link[The_ministry_of_magicWithNum.second][hallWithNum.second] = 1;
+	link[hallWithNum.second][Room_of_requirementWithNum.second] = 1;
+	link[Room_of_requirementWithNum.second][hallWithNum.second] = 1;
+	link[hallWithNum.second][The_dragon_pavilionWithNum.second] = 1;
+	link[The_dragon_pavilionWithNum.second][hallWithNum.second] = 1;
+	if (ifNew) {
+		cout << "欢迎你再次进入游戏，继续开启第五关的征程。" << endl;
 		system("pause");
 		system("cls");
-		cout << "输入100可以查看当前自己的属性" << endl;
-		cout << "输入101可以查看或使用自己拥有的药品" << endl;
-		cout << "输入102可以查看自己目前已经拥有的魔法道具" << endl;
-		cout << "输入103可以进入关卡的店铺" << endl;
-		cout << "输入110可以保存当前进度" << endl;
-		cout << "输入111可以退出当前游戏" << endl;
+		fstream infile(mySorcerer->getName() + "State" + ".txt");
+		//药水初始化
+		int medicineNum = 0;
+		infile >> medicineNum;
+		string medicineName = " ";
+		int recoverValue = 0;
+		int medicinePirce = 0;
+		for (int i = 0; i < medicineNum; i++) {
+			infile >> medicineName >> recoverValue >> medicinePirce;
+			tempMedicine.setInformation(medicineName, recoverValue, medicinePirce);
+			medicine.push_back(tempMedicine);
+		}
+		//技能初始化
+		int skillNum = 0;
+		infile >> skillNum;
+		string skillName = " ";
+		int skillDamage = 0;
+		int skillPrice = 0;
+		for (int i = 0; i < skillNum; i++) {
+			infile >> skillName >> skillDamage >> skillPrice;
+			tempSkill.setValue(skillName, skillDamage, skillPrice);
+			skill.push_back(tempSkill);
+		}
+		//神龙阁初始化
+		badPerson tempBadPerson(0, 0, 0, " ");
+		int dragonNum = 0;
+		int dragonDown = 0;
+		int dragonUp = 0;
+		int dragonBlood = 0;
+		infile >> dragonNum;
+		string dragonName = " ";
+		for (int i = 0; i < dragonNum; i++) {
+			infile >> dragonName >> dragonDown >> dragonUp >> dragonBlood;
+			tempBadPerson.setValue(dragonBlood, dragonDown, dragonUp, dragonName);
+			The_dragon_pavilion.addBadPerson(tempBadPerson);
+		}
+		//其它杂项初始化
+		infile  >> roomNum;
+		bool tempIsInRoom = 0;
+		infile >> tempIsInRoom;
+		hall.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		The_ministry_of_magic.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		Room_of_requirement.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		The_dragon_pavilion.setIfIn(tempIsInRoom);
+		if (roomNum == 0) {
+			mySorcerer->inRoom(&hall);
+		}
+		else if (roomNum == 1) {
+			mySorcerer->inRoom(&The_ministry_of_magic);
+		}
+		else if (roomNum == 2) {
+			mySorcerer->inRoom(&Room_of_requirement);
+		}
+		else if (roomNum == 3) {
+			mySorcerer->inRoom(&The_dragon_pavilion);
+		}
+	}
+	Shop shop(medicine, skill, "西皮士魔术用品店", medicine.size(), skill.size());
+	while (check) {
+		//如果在游戏中死亡
+		if (mySorcerer->getBloodValue() == 0) {
+			mySorcerer->afterDead();
+			system("pause");//格式化处理
+			system("cls");
+		}
+		system("pause");//格式化处理
+		system("cls");
+		//提示语输入
+		cout << "输入 查看属性 可以查看当前自己的属性" << endl;
+		cout << "输入 查用药品 可以查看或使用自己拥有的药品" << endl;
+		cout << "输入 查看道具 可以查看自己目前已经拥有的魔法道具" << endl;
+		cout << "输入 进入店铺 可以进入关卡的店铺" << endl;
+		cout << "输入 保存进度 可以保存当前进度" << endl;
+		cout << "输入 退出游戏 可以退出当前游戏" << endl;
 		cout << "你目前所在的位置为：" << mySorcerer->getRoom()->getName() << endl;
-		cout << "输入地图左上角的数字可以进入该地图" << endl;
+		cout << "输入地图上房间的名字可以进入该房间" << endl;
 		cout << "此关卡的地图：" << endl;
-		map5.showMap();
-		cout << "请输入数字选择:" << endl;
-		int op = 0;
-		bool ifWin = 0;
-		int op3 = 0;//选龙
-		int op1 = 0;//卢修斯
+		map.showMap();
+		cout << "请输入你的选择:" << endl;
+		//选择为op
+		string op = " ";
 		cin >> op;
-		switch (op)
-		{
-		case 100:
+		if (op == "查看属性") {
 			system("cls");
 			mySorcerer->showInformation();
-			break;
-		case 101:
+		}
+		else if (op == "查用药品") {
 			system("cls");
 			mySorcerer->showMedicine();
-			break;
-		case 102:
+		}
+		else if (op == "查看道具 ") {
 			system("cls");
 			mySorcerer->showMagicItem();
-			break;
-		case 103:
+		}
+		else if (op == "进入店铺") {
 			system("cls");
-			shop_G5.showShop(mySorcerer);
-			break;
-		case 110:
-			cout << "还未设置" << endl;
-			break;
-		case 111:
+			shop.showShop(mySorcerer);
+		}
+		else if (op == "保存进度") {
+			mySorcerer->setMyCheckPoint(5);
+			//文件处理
+			File myFile(mySorcerer->getName() + ".txt");
+			File checkPointFile(mySorcerer->getName() + "State" + ".txt");//保存该关卡的进度
+			ofstream tempFile;
+			ofstream stateFile;
+			//信息保存操作
+			//本身属性信息保存
+			tempFile.open(mySorcerer->getName() + ".txt");
+			tempFile << mySorcerer->getDisguiseValue() << " "
+				<< mySorcerer->getForceValue() << " "
+				<< mySorcerer->getDefenceValue() << " "
+				<< mySorcerer->getMagicValue() << " "
+				<< mySorcerer->getBloodValue() << " "
+				<< mySorcerer->getMoney() << " "
+				<< mySorcerer->getName() << endl;
+			tempFile << mySorcerer->getMagicitemNum() << " ";
+			for (int i = 0; i < mySorcerer->getMagicitemNum(); i++) {
+				tempFile << mySorcerer->getMagicitem()[i].getName() << " " << mySorcerer->getMagicitem()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getHorcruxNum() << " ";
+			for (int i = 0; i < mySorcerer->getHorcruxNum(); i++) {
+				tempFile << mySorcerer->getHorcrux()[i].getName() << " " << mySorcerer->getHorcrux()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getSkillNum() << " ";
+			for (int i = 0; i < mySorcerer->getSkillNum(); i++) {
+				tempFile << mySorcerer->getSkill()[i].getName() << " " << mySorcerer->getSkill()[i].getDamage() << endl;
+			}
+			tempFile << mySorcerer->getMedicineNum() << " ";
+			for (int i = 0; i < mySorcerer->getMedicineNum(); i++) {
+				tempFile << mySorcerer->getMedicine()[i].getName() << " " << mySorcerer->getMedicine()[i].getRecoverValue() << " " << mySorcerer->getMedicine()[i].getPrice() << endl;
+			}
+			tempFile << mySorcerer->getMyCheckpoint() << endl;
+			cout << "人物属性信息保存成功!" << endl;
+			//关卡信息保存
+			stateFile.open(mySorcerer->getName() + "State" + ".txt");
+			stateFile << shop.getMedicineNum() << " ";
+			for (int i = 0; i < shop.getMedicineNum(); i++) {
+				stateFile << shop.getMedicine()[i].getName() << " "
+					<< shop.getMedicine()[i].getRecoverValue() << " "
+					<< shop.getMedicine()[i].getPrice() << endl;
+			}
+			stateFile << shop.getSkillNum() << " ";
+			for (int i = 0; i < shop.getSkillNum(); i++) {
+				stateFile << shop.getSkill()[i].getName() << " "
+					<< shop.getSkill()[i].getDamage() << " "
+					<< shop.getSkill()[i].getPrice() << endl;
+			}
+			stateFile << The_dragon_pavilion.getBadPersonSize() << " ";
+			for (int i = 0; i < The_dragon_pavilion.getBadPersonSize(); i++) {
+				stateFile << The_dragon_pavilion.getBadPerson()[i].getName() << " "
+					<< The_dragon_pavilion.getBadPerson()[i].getDown() << " "
+					<< The_dragon_pavilion.getBadPerson()[i].getUp() << " "
+					<< The_dragon_pavilion.getBadPerson()[i].getblood() << endl;
+			}
+			stateFile  << " " << roomNum << endl;
+			//0.大厅 1.魔法部 2.有求必应屋 3.神龙阁四个地图的进入情况
+			stateFile << hall.getIfIn() << " "
+				<< The_ministry_of_magic.getIfIn() << " "
+				<< Room_of_requirement.getIfIn() << " "
+				<< The_dragon_pavilion.getIfIn() << endl;
+			//	//店铺
+			mySorcerer->setMyCheckPoint(5);
+			cout << "该关卡状态信息保存成功！" << endl;
+			tempFile.close();
+			stateFile.close();
+		}
+		else if (op == "退出游戏") {
 			cout << "你已经结束该游戏。" << endl;
+			system("pause");
+			system("cls");
 			return -1;
 			break;
-		default:
-			cout << "操作失败！" << endl;
-			break;
-		case 3:	//进入神龙阁
-			mySorcerer->inRoom(&The_dragon_pavilion);
+		}
+		else if (op == "大厅" && roomNum == hallWithNum.second || op == "魔法部" && roomNum == The_ministry_of_magicWithNum.second || op == "有求必应屋" && roomNum == Room_of_requirementWithNum.second || op == "神龙阁" && roomNum == The_dragon_pavilionWithNum.second) {
 			system("cls");
-			cout << "欢迎来到 " << The_dragon_pavilion.getName() << endl;
-			The_dragon_pavilion.inRoom();
-			cout << "在这里你可以挑战巨龙，打败它们你可以获得相应的加成" << endl;
-			cout << "1.火龙		2.风龙		3.水龙		4.土龙		5.远古龙	0.逃跑大厅" << endl;
-			cin >> op3;
-			switch (op3)
-			{
-			case 1:
-				cout << "你准备挑战的是火龙...战斗即将开始。" << endl;
-				system("pause");
-				system("cls");
-				ifWin = mySorcerer->battle(mySorcerer, Fire_dragon);
-				if (ifWin == 1) {
-					cout << "恭喜你击败了了火龙并获得了属性加成。" << endl;
-					//写属性加成商量后定
-				}
-				else {
-					cout << "你被火龙击败，请调整状态后再来。" << endl;
-				}
-				break;
-			case 2:
-				cout << "你准备挑战的是风龙...战斗即将开始。" << endl;
-				system("pause");
-				system("cls");
-				ifWin = mySorcerer->battle(mySorcerer, Wind_dragon);
-				if (ifWin == 1) {
-					cout << "恭喜你击败了了风龙并获得了属性加成。" << endl;
-					//写属性加成商量后定
-				}
-				else {
-					cout << "你被风龙击败，请调整状态后再来。" << endl;
-				}
-				break;
-			case 3:
-				cout << "你准备挑战的是水龙...战斗即将开始。" << endl;
-				system("pause");
-				system("cls");
-				ifWin = mySorcerer->battle(mySorcerer, Water_dragon);
-				if (ifWin == 1) {
-					cout << "恭喜你击败了了水龙并获得了属性加成。" << endl;
-					//写属性加成商量后定
-				}
-				else {
-					cout << "你被水龙击败，请调整状态后再来。" << endl;
-				}
-				break;
-			case 4:
-				cout << "你准备挑战的是土龙...战斗即将开始。" << endl;
-				system("pause");
-				system("cls");
-				ifWin = mySorcerer->battle(mySorcerer, Earth_dragon);
-				if (ifWin == 1) {
-					cout << "恭喜你击败了了土龙并获得了属性加成。" << endl;
-					//写属性加成商量后定
-				}
-				else {
-					cout << "你被土龙击败，请调整状态后再来。" << endl;
-				}
-				break;
-			case 5:
-				cout << "你准备挑战的是远古龙...战斗即将开始。" << endl;
-				system("pause");
-				system("cls");
-				ifWin = mySorcerer->battle(mySorcerer, Far_from_cologne);
-				if (ifWin == 1) {
-					cout << "恭喜你击败了了远古龙并获得了属性加成。" << endl;
-					//写属性加成商量后定
-				}
-				else {
-					cout << "你被远古龙击败，请调整状态后再来。" << endl;
-				}
-				break;
-			default:
-				break;
-			}
-			mySorcerer->inRoom(&hall);
-			break;
-		case 2:
-			mySorcerer->inRoom(&Room_of_requirement);
-			system("cls");
-			cout << "欢迎来到 " << Room_of_requirement.getName() << endl;
-			if (bathroom.getIfIn()) {
-				cout << "欢迎您再次来到 " << Room_of_requirement.getName() << endl;
-				break;
-			}
-			//在有求必应屋获得什么等待添加。
-			Room_of_requirement.inRoom();
-			break;
-		case 1:
-
+			cout << "你已经在该位置！" << endl;
+			//格式化操作	
+		}
+		else if (op == "魔法部" && link[roomNum][The_ministry_of_magicWithNum.second]) {
+			bool ifWin = 0;
+			roomNum = 1;
 			mySorcerer->inRoom(&The_ministry_of_magic);
 			system("cls");
 			cout << "欢迎来到 " << The_ministry_of_magic.getName() << endl;
 			cout << "此时卢修斯正在魔法部里，你是否选择逃跑" << endl;
 			cout << "1.否		2.是" << endl;
-			cin >> op1;
+			int op_magic = 0;
+			cin >> op_magic;
 			system("cls");
-			if (op1 == 1) {
-				cout << "卢修斯说的话" << endl;
+			if (op_magic == 1) {
+				cout << "卢修斯:今天你不会活着走出魔法部！\n" << endl;
+				system("pause");
+				system("cls");
 				ifWin = mySorcerer->battle(mySorcerer, Lucius);
 				if (ifWin == 1) {
 					//成功打败的话
-					check = 1;
+					check = 0;
+					cout << "恭喜你通过第五关！" << endl;
+					system("pause");
+					system("cls");
 				}
 				else if (ifWin == 0) {
+					mySorcerer->setBlood(0);
 					cout << "挑战失败！" << endl;
+					//输出菜
+					cout << "\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\n\t\t   菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\n\t\t   菜\t\t   菜\t\t   菜\t\n\t\t    菜\t\t   菜\t\t  菜\t\n\t\t     菜\t\t   菜\t\t 菜\t\n\n\t\t\t\t   菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t\t   菜\n\t\t\t         菜菜菜\n\t\t\t       菜  菜  菜\n\t\t\t     菜    菜    菜\n\t\t\t   菜      菜      菜\n\t\t\t 菜        菜        菜\n\t\t       菜          菜          菜\n\t\t     菜            菜            菜\n\t\t   菜              菜              菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n" << endl;
+					system("pause");
+					system("cls");
 					mySorcerer->inRoom(&hall);
+					roomNum = 0;
+					//0.大厅 1.魔法部 2.有求必应屋 3.神龙阁
 				}
 			}
-			else if (op1 == 2) {
+			else if (op_magic == 2) {
 				cout << "你成功逃离。" << endl;
 				mySorcerer->inRoom(&hall);
+				roomNum = 0;
+				//0.大厅 1.魔法部 2.有求必应屋 3.神龙阁
 			}
 			else {
-				cout << "操作失败！请正确输入。" << endl;
+				cout << "操作失败！你已退出该房间。" << endl;
 				mySorcerer->inRoom(&hall);
+				roomNum = 0;
+				//0.大厅 1.魔法部 2.有求必应屋 3.神龙阁
 			}
-			break;
+		}
+		else if (op == "魔法部" && !link[roomNum][The_ministry_of_magicWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达魔法部，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "有求必应屋" && link[roomNum][Room_of_requirementWithNum.second]) {
+			roomNum = 2;
+			mySorcerer->inRoom(&The_ministry_of_magic);
+			system("cls");
+			cout << "欢迎来到 " << Room_of_requirement.getName() << endl;
+			if (Room_of_requirement.getIfIn()) {
+				cout << "欢迎您再次来到 " << Room_of_requirement.getName() << endl;
+				cout << "你去神龙阁打完龙了么？" << endl;
+			}
+			else {
+				//在有求必应屋获得什么等待添加。
+				Room_of_requirement.inRoom();
+				cout << "去神龙阁挑战大龙成为真正的勇士！" << endl;
+			}
+		}
+		else if (op == "有求必应屋" && !link[roomNum][Room_of_requirementWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达有求必应屋，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "神龙阁" && link[roomNum][The_dragon_pavilionWithNum.second]) {
+			roomNum = 3;
+			mySorcerer->inRoom(&The_dragon_pavilion);
+			system("cls");
+			cout << "欢迎来到 " << The_dragon_pavilion.getName() << endl;
+			The_dragon_pavilion.inRoom();
+			cout << "在这里你可以挑战巨龙，打败它们你可以获得相应的加成" << endl;
+			int op_dragon = 0;
+			bool ifWin = 0;
+			cout << "神龙阁中的神龙情况如下：" << endl;
+			for (int i = 0; i < The_dragon_pavilion.getBadPerson().size(); i++) {
+				cout << i + 1 << ". " << The_dragon_pavilion.getBadPerson()[i].getName() << endl;
+			}
+			cout << "请输入编号选择你要与之战斗的龙：（0逃跑）" << endl;
+			cin >> op_dragon;
+			if (op_dragon == 0) {
+				cout << "你成功逃跑！" << endl;
+				mySorcerer->inRoom(&hall);
+				roomNum = 0;
+				system("pause");
+				system("cls");
+			}
+			else {
+				cout << "你准备挑战的是" << The_dragon_pavilion.getBadPerson()[op_dragon - 1].getName() << "...战斗即将开始。" << endl;
+				system("pause");
+				system("cls");
+				ifWin = mySorcerer->battle(mySorcerer, The_dragon_pavilion.getBadPerson()[op_dragon - 1]);
+
+				if (ifWin == 1) {
+					cout << "恭喜你击败了" << The_dragon_pavilion.getBadPerson()[op_dragon - 1].getName() << "并获得了属性加成。" << endl;
+					The_dragon_pavilion.eraseBadPerson(op_dragon);
+					mySorcerer->inRoom(&hall);
+					roomNum = 0;
+					//0.大厅 1.魔法部 2.有求必应屋 3.神龙阁
+					//写属性加成商量后定
+				}
+				else {
+					mySorcerer->setBlood(0);
+					cout << "你被击败，请调整状态后再来。" << endl;
+					//输出菜
+					cout << "\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\n\t\t   菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\n\t\t   菜\t\t   菜\t\t   菜\t\n\t\t    菜\t\t   菜\t\t  菜\t\n\t\t     菜\t\t   菜\t\t 菜\t\n\n\t\t\t\t   菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t\t   菜\n\t\t\t         菜菜菜\n\t\t\t       菜  菜  菜\n\t\t\t     菜    菜    菜\n\t\t\t   菜      菜      菜\n\t\t\t 菜        菜        菜\n\t\t       菜          菜          菜\n\t\t     菜            菜            菜\n\t\t   菜              菜              菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n" << endl;
+					system("pause");
+					system("cls");
+					mySorcerer->inRoom(&hall);
+					roomNum = 0;
+					//0.大厅 1.魔法部 2.有求必应屋 3.神龙阁
+				}
+			}	
+
+		}
+		else if (op == "神龙阁" && !link[roomNum][The_dragon_pavilionWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达有求神龙阁，请仔细观察地图！" << endl;
+			//格式化操作
+		}
+		else if (op == "大厅" && link[roomNum][hallWithNum.second]) {
+			system("cls");
+			cout << "欢迎来到大厅~" << endl;
+			roomNum = 0;
+			mySorcerer->inRoom(&hall);
+		}
+		else if (op == "大厅" && !link[roomNum][hallWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达大厅，请仔细观察地图！" << endl;
+			//格式化操作	
+		}
+		else {
+			system("cls");
+			cout << "操作失败！" << endl;
+			//格式化操作	
 		}
 	}
-	cout << "恭喜你通过第五关" << endl;
 	return 1;
 }
 
 
-int Plot::init6(sorcerer *mySorcerer) {
-
-	//药水配置待改
-	vector<Medicine> medicine_G5;
+int Plot::init6(sorcerer *mySorcerer, int myCheckPoint, bool ifNew) {
+	//本关剧情格式化记录
+	//小药水数目 中药水数目 大药水数目 技能 ifKillKerberos roomNum 0大厅 1校长室 2阁楼 3地穴四个地图的进入情况
+	//bool end = 0;	//
+	//开局送的礼物
+	//药水设置 1大2中2小
+	//药水数目需要进行一个记录 记录的格式为 X X X分别指小中大
+	vector<Medicine> medicine;
+	Medicine tempMedicine(" ", 0, 0);
 	Medicine medicineTempSmall("小药水", 20, 400);
-	medicine_G5.push_back(medicineTempSmall);
-	medicine_G5.push_back(medicineTempSmall);
 	Medicine medicineTempMiddle("中药水", 40, 800);
-	medicine_G5.push_back(medicineTempMiddle);
-	medicine_G5.push_back(medicineTempMiddle);
 	Medicine medicineTempLarge("大药水", 60, 1200);
-	medicine_G5.push_back(medicineTempLarge);
-	vector<Skill> a;
-	Shop shop_G5(medicine_G5, a, "奇幻空间魔术用品店", 5);
+	if (!ifNew) {
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempLarge);
+		medicine.push_back(medicineTempLarge);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+	}
+	//超市里技能设置
+	//咒语：盔甲护身（盔甲咒）:Protego ：15 600 门牙赛大棒（长出长牙） : Densaugeo：12  400
+	vector<Skill> skill;
+	Skill tempSkill(" ", 0, 0);
+	Skill Avada_kedavra("Protego", 100, 3600);
+	if (myCheckPoint == 0) {
+		skill.push_back(Avada_kedavra);
+	}
+	//一些判断
 	bool check = 1;
+	//本关地点设置 0大厅 1魔法部 2古灵阁
 	room hall("大厅");
 	room The_ministry_of_magic("魔法部");
 	room gringotts("古灵阁");
-	map map6("\t1.*******\t\t\t\t2.*******\n\t*\t*\t\t\t\t*\t*\n\t*魔法部\t*\t<--------------->\t*古灵阁\t*\n\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********\n\t  /\\\t\t\t\t\t   ||\t\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  \\/\t\t\t\t\t   ||\t\n\t0.*******\t\t\t\t   ||\n\t*\t*\t\t\t\t   ||\n\t*大厅\t*<===================================\n\t*\t*\n\t*********");
-	//cout << "没有人相信伏地魔回来，\n哈利被认为是个骗子，\n只有他的朋友们相信并支持着他。\n哈利于伙伴们组建邓不利多军来抵抗，\n但到后来他中了伏地魔的诡计，\n与朋友们来到魔法部解救教父小天狼星。。。。。。。" << endl;
-	system("pause");
-	system("cls");
+	int roomNum = 0;
+	//开局先到达一个地点
 	mySorcerer->inRoom(&hall);
-	cout << "欢迎进入第六关~" << endl;
-	cout << "你目前所在的位置: " << mySorcerer->getRoom()->getName() << endl;
+	roomNum = 0;
+	map map("\t*********\t\t\t\t*********\n\t*\t*\t\t\t\t*\t*\n\t*魔法部\t*\t<--------------->\t*古灵阁\t*\n\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********\n\t  /\\\t\t\t\t\t   ||\t\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  ||\t\t\t\t\t   ||\n\t  \\/\t\t\t\t\t   ||\t\n\t*********\t\t\t\t   ||\n\t*\t*\t\t\t\t   ||\n\t*大厅\t*<===================================\n\t*\t*\n\t*********");
+	if (!ifNew) {
+		//背景故事
+		cout << "还有四天，哈利就要迎来自己十七岁的生日，\n成为一名真正的魔法师。\n然而，他不得不提前离开女贞路4号，\n永远离开这个他曾经生活过十六年的地方。\n凤凰社的成员精心谋划了秘密转移哈利的计划，\n以防哈利遭到伏地魔及其追随者食死徒的袭击。然而，可怕的意外还是发生了……\n " << endl;
+		system("pause");
+		system("cls");
+		cout << "欢迎进入第六关~" << endl;
+	}
 	//在古灵阁需要打6个食死徒
-	//在这里
+	//人物设置
 	badPerson dolohov(100, 5, 10, "多洛霍夫");
 	badPerson rookwood(100, 5, 10, "卢克伍德");
 	badPerson bellatrix(100, 5, 10, "贝拉特里克斯");
 	badPerson travers(100, 5, 10, "特拉弗斯");
 	badPerson DoleFinn(100, 5, 10, "多尔芬");
 	badPerson malfoy(100, 5, 10, "马尔福");
-	gringotts.addBadPerson(dolohov);
-	gringotts.addBadPerson(rookwood);
-	gringotts.addBadPerson(bellatrix);
-	gringotts.addBadPerson(travers);
-	gringotts.addBadPerson(DoleFinn);
-	gringotts.addBadPerson(malfoy);
-
-	while (check) {
+	if (!ifNew) {
+		gringotts.addBadPerson(dolohov);
+		gringotts.addBadPerson(rookwood);
+		gringotts.addBadPerson(bellatrix);
+		gringotts.addBadPerson(travers);
+		gringotts.addBadPerson(DoleFinn);
+		gringotts.addBadPerson(malfoy);
+	}
+	//使用pair绑定
+	pair<string, int> hallWithNum("大厅", 0);
+	pair<string, int> The_ministry_of_magicWithNum("魔法部", 1);
+	pair<string, int> gringottsWithNum("古灵阁", 2);
+	//判断连通情况	link[A][B] = 1代表A->B是通的
+	//邻接矩阵
+	bool link[10][10];
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++)
+			link[i][j] = 0;
+	}
+	link[hallWithNum.second][The_ministry_of_magicWithNum.second] = 1;
+	link[The_ministry_of_magicWithNum.second][hallWithNum.second] = 1;
+	link[The_ministry_of_magicWithNum.second][gringottsWithNum.second] = 1;
+	link[gringottsWithNum.second][The_ministry_of_magicWithNum.second] = 1;
+	if (ifNew) {
+		cout << "欢迎你再次进入游戏，继续开启第六关的征程。" << endl;
 		system("pause");
 		system("cls");
-		cout << "输入100可以查看当前自己的属性" << endl;
-		cout << "输入101可以查看或使用自己拥有的药品" << endl;
-		cout << "输入102可以查看自己目前已经拥有的魔法道具" << endl;
-		cout << "输入103可以进入关卡的店铺" << endl;
-		cout << "输入110可以保存当前进度" << endl;
-		cout << "输入111可以退出当前游戏" << endl;
-		cout << "你目前所在的位置为：" << mySorcerer->getRoom()->getName() << endl;
-		cout << "输入地图左上角的数字可以进入该地图" << endl;
-		cout << "此关卡的地图：" << endl;
-		map6.showMap();
-		cout << "请输入数字选择:" << endl;
-		int op = 0;
-		bool ifWin = 0;
-		int op1 = 1;	//选打什么怪用
-		int op2 = 0;
-		cin >> op;
-		switch (op)
-		{
-		case 100:
-			system("cls");
-			mySorcerer->showInformation();
-			break;
-		case 101:
-			system("cls");
-			mySorcerer->showMedicine();
-			break;
-		case 102:
-			system("cls");
-			mySorcerer->showMagicItem();
-			break;
-		case 103:
-			system("cls");
-			shop_G5.showShop(mySorcerer);
-			break;
-		case 110:
-			cout << "还未设置" << endl;
-			break;
-		case 111:
-			cout << "你已经结束该游戏。" << endl;
-			return -1;
-			break;
-		default:
-			cout << "操作失败！" << endl;
-			break;
-		case 1:
+		fstream infile(mySorcerer->getName() + "State" + ".txt");
+		//药水初始化
+		int medicineNum = 0;
+		infile >> medicineNum;
+		string medicineName = " ";
+		int recoverValue = 0;
+		int medicinePirce = 0;
+		for (int i = 0; i < medicineNum; i++) {
+			infile >> medicineName >> recoverValue >> medicinePirce;
+			tempMedicine.setInformation(medicineName, recoverValue, medicinePirce);
+			medicine.push_back(tempMedicine);
+		}
+		//技能初始化
+		int skillNum = 0;
+		infile >> skillNum;
+		string skillName = " ";
+		int skillDamage = 0;
+		int skillPrice = 0;
+		for (int i = 0; i < skillNum; i++) {
+			infile >> skillName >> skillDamage >> skillPrice;
+			tempSkill.setValue(skillName, skillDamage, skillPrice);
+			skill.push_back(tempSkill);
+		}
+		//古灵阁初始化
+		badPerson tempBadPerson(0, 0, 0, " ");
+		int badpersonNum = 0;
+		int badpersonDown = 0;
+		int badpersonUp = 0;
+		int badpersonBlood = 0;
+		infile >> badpersonNum;
+		string badpersonName = " ";
+		for (int i = 0; i < badpersonNum; i++) {
+			infile >> badpersonName >> badpersonDown >> badpersonUp >> badpersonBlood;
+			tempBadPerson.setValue(badpersonBlood, badpersonDown, badpersonUp, badpersonName);
+			gringotts.addBadPerson(tempBadPerson);
+		}
+		//其它杂项初始化
+		infile  >> roomNum;
+		bool tempIsInRoom = 0;
+		infile >> tempIsInRoom;
+		hall.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		The_ministry_of_magic.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		gringotts.setIfIn(tempIsInRoom);
+		if (roomNum == 0) {
+			mySorcerer->inRoom(&hall);
+		}
+		else if (roomNum == 1) {
 			mySorcerer->inRoom(&The_ministry_of_magic);
-			cout << "欢迎来到魔法部" << endl;
-			break;
-		case 2:
-			op2 = 1;
+		}
+		else if (roomNum == 2) {
 			mySorcerer->inRoom(&gringotts);
-			cout << "欢迎来到古灵阁，一群食死徒正在等着你。。。。。。";
-			while (op2 == 1) {
-				gringotts.showBadPerson();
-				cout << "请输入你要对战的食死徒:(0是逃跑)" << endl;
-				cin >> op1;
-				if (op1 == 0) {
-					cout << "逃跑成功！" << endl;
-					mySorcerer->inRoom(&The_ministry_of_magic);
-				}
-				ifWin = mySorcerer->battle(mySorcerer, gringotts.getBadPerson(op1));	//	修改
-				if (ifWin == 1) {
-					gringotts.eraseBadPerson(op1);
-					cout << "恭喜你你击败了一个食司徒,你可以选择继续战斗或者逃跑。" << endl;
-					cout << "1.继续战斗		2.逃跑" << endl;
-					cin >> op2;
-					if (op2 == 2) {
-						op2 = 0;
-						cout << "逃跑成功！" << endl;
-						mySorcerer->inRoom(&The_ministry_of_magic);
-					}
-					else {
-						cout << "你选择了继续战斗" << endl;
-					}
-				}
-				else {
-					cout << "你被打败" << endl;
-				}
-				if (gringotts.getBadPersonSize() == 0) {
-					check = 1;
-					op2 = 0;
-				}
-			}
-
-			break;
 		}
 	}
-	cout << "恭喜你通过第六关" << endl;
+	Shop shop(medicine, skill, "西皮士魔术用品店", medicine.size(), skill.size());
+
+	while (check) {
+		//如果在游戏中死亡
+		if (mySorcerer->getBloodValue() == 0) {
+			mySorcerer->afterDead();
+			system("pause");//格式化处理
+			system("cls");
+		}
+		system("pause");//格式化处理
+		system("cls");
+		//提示语输入
+		cout << "输入 查看属性 可以查看当前自己的属性" << endl;
+		cout << "输入 查用药品 可以查看或使用自己拥有的药品" << endl;
+		cout << "输入 查看道具 可以查看自己目前已经拥有的魔法道具" << endl;
+		cout << "输入 进入店铺 可以进入关卡的店铺" << endl;
+		cout << "输入 保存进度 可以保存当前进度" << endl;
+		cout << "输入 退出游戏 可以退出当前游戏" << endl;
+		cout << "你目前所在的位置为：" << mySorcerer->getRoom()->getName() << endl;
+		cout << "输入地图上房间的名字可以进入该房间" << endl;
+		cout << "此关卡的地图：" << endl;
+		map.showMap();
+		cout << "请输入你的选择:" << endl;
+		//选择为op
+		string op = " ";
+		cin >> op;
+		if (op == "查看属性") {
+			system("cls");
+			mySorcerer->showInformation();
+		}
+		else if (op == "查用药品") {
+			system("cls");
+			mySorcerer->showMedicine();
+		}
+		else if (op == "查看道具 ") {
+			system("cls");
+			mySorcerer->showMagicItem();
+		}
+		else if (op == "进入店铺") {
+			system("cls");
+			shop.showShop(mySorcerer);
+		}
+		else if (op == "保存进度") {
+			mySorcerer->setMyCheckPoint(6);
+			//文件处理
+			File myFile(mySorcerer->getName() + ".txt");
+			File checkPointFile(mySorcerer->getName() + "State" + ".txt");//保存该关卡的进度
+			ofstream tempFile;
+			ofstream stateFile;
+			//信息保存操作
+			//本身属性信息保存
+			tempFile.open(mySorcerer->getName() + ".txt");
+			tempFile << mySorcerer->getDisguiseValue() << " "
+				<< mySorcerer->getForceValue() << " "
+				<< mySorcerer->getDefenceValue() << " "
+				<< mySorcerer->getMagicValue() << " "
+				<< mySorcerer->getBloodValue() << " "
+				<< mySorcerer->getMoney() << " "
+				<< mySorcerer->getName() << endl;
+			tempFile << mySorcerer->getMagicitemNum() << " ";
+			for (int i = 0; i < mySorcerer->getMagicitemNum(); i++) {
+				tempFile << mySorcerer->getMagicitem()[i].getName() << " " << mySorcerer->getMagicitem()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getHorcruxNum() << " ";
+			for (int i = 0; i < mySorcerer->getHorcruxNum(); i++) {
+				tempFile << mySorcerer->getHorcrux()[i].getName() << " " << mySorcerer->getHorcrux()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getSkillNum() << " ";
+			for (int i = 0; i < mySorcerer->getSkillNum(); i++) {
+				tempFile << mySorcerer->getSkill()[i].getName() << " " << mySorcerer->getSkill()[i].getDamage() << endl;
+			}
+			tempFile << mySorcerer->getMedicineNum() << " ";
+			for (int i = 0; i < mySorcerer->getMedicineNum(); i++) {
+				tempFile << mySorcerer->getMedicine()[i].getName() << " " << mySorcerer->getMedicine()[i].getRecoverValue() << " " << mySorcerer->getMedicine()[i].getPrice() << endl;
+			}
+			tempFile << mySorcerer->getMyCheckpoint() << endl;
+			cout << "人物属性信息保存成功!" << endl;
+			//关卡信息保存
+			stateFile.open(mySorcerer->getName() + "State" + ".txt");
+			stateFile << shop.getMedicineNum() << " ";
+			for (int i = 0; i < shop.getMedicineNum(); i++) {
+				stateFile << shop.getMedicine()[i].getName() << " "
+					<< shop.getMedicine()[i].getRecoverValue() << " "
+					<< shop.getMedicine()[i].getPrice() << endl;
+			}
+			stateFile << shop.getSkillNum() << " ";
+			for (int i = 0; i < shop.getSkillNum(); i++) {
+				stateFile << shop.getSkill()[i].getName() << " "
+					<< shop.getSkill()[i].getDamage() << " "
+					<< shop.getSkill()[i].getPrice() << endl;
+			}
+
+			stateFile << gringotts.getBadPersonSize() << " ";
+			for (int i = 0; i < gringotts.getBadPersonSize(); i++) {
+				stateFile << gringotts.getBadPerson()[i].getName() << " "
+					<< gringotts.getBadPerson()[i].getDown() << " "
+					<< gringotts.getBadPerson()[i].getUp() << " "
+					<< gringotts.getBadPerson()[i].getblood() << endl;
+			}
+			stateFile << " " << roomNum << endl;
+			//0大厅 1魔法部 2古灵阁 四个地图的进入情况
+			stateFile << hall.getIfIn() << " "
+				<< The_ministry_of_magic.getIfIn() << " "
+				<< gringotts.getIfIn() << endl;
+			//	//店铺
+			mySorcerer->setMyCheckPoint(6);
+			cout << "该关卡状态信息保存成功！" << endl;
+			tempFile.close();
+			stateFile.close();
+		}
+		else if (op == "退出游戏") {
+			cout << "你已经结束该游戏。" << endl;
+			system("pause");
+			system("cls");
+			return -1;
+			break;
+		}
+		else if (op == "大厅" && roomNum == hallWithNum.second || op == "魔法部" && roomNum == The_ministry_of_magicWithNum.second || op == "古灵阁" && roomNum == gringottsWithNum.second) {
+			system("cls");
+			cout << "你已经在该位置！" << endl;
+			//格式化操作	
+		}
+		else if (op == "大厅" && link[roomNum][hallWithNum.second]) {
+			system("cls");
+			cout << "欢迎来到大厅~" << endl;
+			roomNum = 0;
+			mySorcerer->inRoom(&hall);
+			//本关地点设置 0大厅 1魔法部 2古灵阁
+		}
+		else if (op == "大厅" && !link[roomNum][hallWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达大厅，请仔细观察地图！" << endl;
+			//格式化操作	
+		}
+		else if (op == "魔法部" && link[roomNum][The_ministry_of_magicWithNum.second]) {
+			roomNum = 1;
+			mySorcerer->inRoom(&The_ministry_of_magic);
+			system("cls");
+			cout << "欢迎来到 " << The_ministry_of_magic.getName() << endl;
+			if (The_ministry_of_magic.getIfIn()) {
+				cout << "欢迎您再次来到 " << The_ministry_of_magic.getName() << endl;
+				cout << "古灵阁危机严重！" << endl;
+			}
+			else {
+				//在有求必应屋获得什么等待添加。
+				The_ministry_of_magic.inRoom();
+				cout << "与黑魔王的决战即将来临！" << endl;
+			}
+		}
+		else if (op == "魔法部" && !link[roomNum][The_ministry_of_magicWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达魔法部，请仔细观察地图！" << endl;
+			//格式化操作	
+		}
+		else if (op == "古灵阁" && link[roomNum][gringottsWithNum.second]) {
+			roomNum = 2;
+			mySorcerer->inRoom(&gringotts);
+			system("cls");
+			cout << "欢迎来到 " << gringotts.getName() << endl;
+			gringotts.inRoom();
+			cout << "在这里你可以挑战黑魔法师，打败它们你方可通关" << endl;
+			int op_person = 0;
+			bool ifWin = 0;
+			cout << "古灵阁中的黑魔法师情况如下：" << endl;
+			for (int i = 0; i < gringotts.getBadPerson().size(); i++) {
+				cout << i + 1 << ". " << gringotts.getBadPerson()[i].getName() << endl;
+			}
+			cout << "请输入编号选择你要与之战斗的黑魔法师：（0逃跑）" << endl;
+			cin >> op_person;
+			if (op_person == 0) {
+				cout << "你成功逃跑！" << endl;
+				mySorcerer->inRoom(&hall);
+				roomNum = 0;
+				system("pause");
+				system("cls");
+			}
+			else {
+				cout << "你准备挑战的是" << gringotts.getBadPerson()[op_person - 1].getName() << "...战斗即将开始。" << endl;
+				system("pause");
+				system("cls");
+				ifWin = mySorcerer->battle(mySorcerer, gringotts.getBadPerson()[op_person - 1]);
+				if (ifWin == 1) {
+					cout << "恭喜你击败了了" << gringotts.getBadPerson()[op_person - 1].getName() << "并获得了属性加成。" << endl;
+					gringotts.eraseBadPerson(1);
+					mySorcerer->inRoom(&hall);
+					//写属性加成商量后定
+					roomNum = 0;
+				}
+				else {
+					mySorcerer->setBlood(0);
+					cout << "你被击败，请调整状态后再来。" << endl;
+					//输出菜
+					cout << "\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t   菜\t\t     菜\n\t\t\t   菜\t\t     菜\n\n\t\t   菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\n\t\t   菜\t\t   菜\t\t   菜\t\n\t\t    菜\t\t   菜\t\t  菜\t\n\t\t     菜\t\t   菜\t\t 菜\t\n\n\t\t\t\t   菜\n\t\t菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜菜\n\t\t\t\t   菜\n\t\t\t         菜菜菜\n\t\t\t       菜  菜  菜\n\t\t\t     菜    菜    菜\n\t\t\t   菜      菜      菜\n\t\t\t 菜        菜        菜\n\t\t       菜          菜          菜\n\t\t     菜            菜            菜\n\t\t   菜              菜              菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n\t\t\t\t   菜\n" << endl;
+					system("pause");
+					system("cls");
+					mySorcerer->inRoom(&hall);
+					//本关地点设置 0大厅 1魔法部 2古灵阁
+					roomNum = 0;
+				}
+				if (gringotts.getBadPersonSize() == 0) {
+					check = 0;
+					system("pause");
+					system("cls");
+					cout << "恭喜你通过第六关！" << endl;
+				}
+			}
+		}
+		else if (op == "古灵阁" && !link[roomNum][gringottsWithNum.second]) {
+			system("cls");
+			cout << "你所在的当前位置无法直接到达古灵阁，请仔细观察地图！" << endl;
+			//格式化操作	
+		}
+		else {
+			system("cls");
+			cout << "操作失败！" << endl;
+			//格式化操作
+		}
+	}
 	return 1;
 }
 
-int Plot::initFinal(sorcerer * mySorcerer)
-{
-	//药水配置待改
-	vector<Medicine> medicine_G5;
+int Plot::initFinal(sorcerer * mySorcerer, int myCheckPoint, bool ifNew) {
+	//药水设置 1大2中2小
+	//药水数目需要进行一个记录 记录的格式为 X X X分别指小中大
+	vector<Medicine> medicine;
+	Medicine tempMedicine(" ", 0, 0);
 	Medicine medicineTempSmall("小药水", 20, 400);
-	medicine_G5.push_back(medicineTempSmall);
-	medicine_G5.push_back(medicineTempSmall);
 	Medicine medicineTempMiddle("中药水", 40, 800);
-	medicine_G5.push_back(medicineTempMiddle);
-	medicine_G5.push_back(medicineTempMiddle);
 	Medicine medicineTempLarge("大药水", 60, 1200);
-	medicine_G5.push_back(medicineTempLarge);
-	vector<Skill> a;
-	Shop shop_G2(medicine_G5, a, "奇幻空间魔术用品店", 5);
+	if (!ifNew) {
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempLarge);
+		medicine.push_back(medicineTempLarge);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempSmall);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempMiddle);
+		medicine.push_back(medicineTempLarge);
+		medicine.push_back(medicineTempLarge);
+	}
+	vector<Skill> skill;
+	Skill tempSkill(" ", 0, 0);
+	Skill Imperio("Imperio", 1500, 100);
+	Skill Crucio("Crucio", 1200, 400);
+	if (myCheckPoint == 0) {
+		skill.push_back(Imperio);
+		skill.push_back(Crucio);
+	}
+	//一些判断;
 	bool check = 1;
+	//地图
 	room hall("大厅");
 	room The_black_forest("黑森林");
-	map mapfinal("\t0.*******\t\t\t\t1.*******\n\t*\t*\t\t\t\t*\t*\n\t*大厅\t*\t---------------- > \t*黑森林\t*\n\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********");
-	//cout << "没有人相信伏地魔回来，\n哈利被认为是个骗子，\n只有他的朋友们相信并支持着他。\n哈利于伙伴们组建邓不利多军来抵抗，\n但到后来他中了伏地魔的诡计，\n与朋友们来到魔法部解救教父小天狼星。。。。。。。" << endl;
+	int roomNum = 0; //储存当前所在的房间号
+	//开局先到达一个地点
+	mySorcerer->inRoom(&hall);
+	roomNum = 0;
+	map map("\t*********\t\t\t\t*********\n\t*\t*\t\t\t\t*\t*\n\t*大厅\t*\t<--------------->\t*黑森林\t*\n\t*\t*\t\t\t\t*\t*\n\t*********\t\t\t\t*********");
+	//背景故事
+	if (myCheckPoint != 7) {
+		cout << "终局之战，你与伏地魔的最后之战即将开启！！！" << endl;
+	}
 	system("pause");
 	system("cls");
 	mySorcerer->inRoom(&hall);
 	cout << "欢迎进入第终局之战~" << endl;
 	cout << "你目前所在的位置: " << mySorcerer->getRoom()->getName() << endl;
-
+	//人物设置
 	badPerson voldemort(100, 5, 10, "伏地魔");
-
-
-	while (check) {
+	Shop shop(medicine, skill, "西皮士魔术用品店", medicine.size(), skill.size());
+	if (ifNew) {
+		cout << "欢迎你再次进入游戏，继续开启第七关的征程。" << endl;
 		system("pause");
 		system("cls");
-		cout << "输入100可以查看当前自己的属性" << endl;
-		cout << "输入101可以查看或使用自己拥有的药品" << endl;
-		cout << "输入102可以查看自己目前已经拥有的魔法道具" << endl;
-		cout << "输入103可以进入关卡的店铺" << endl;
-		cout << "输入110可以保存当前进度" << endl;
-		cout << "输入111可以退出当前游戏" << endl;
+		fstream infile(mySorcerer->getName() + "State" + ".txt");
+		//药水初始化
+		int medicineNum = 0;
+		infile >> medicineNum;
+		string medicineName = " ";
+		int recoverValue = 0;
+		int medicinePirce = 0;
+		for (int i = 0; i < medicineNum; i++) {
+			infile >> medicineName >> recoverValue >> medicinePirce;
+			tempMedicine.setInformation(medicineName, recoverValue, medicinePirce);
+			medicine.push_back(tempMedicine);
+		}
+		//技能初始化
+		int skillNum = 0;
+		infile >> skillNum;
+		string skillName = " ";
+		int skillDamage = 0;
+		int skillPrice = 0;
+		for (int i = 0; i < skillNum; i++) {
+			infile >> skillName >> skillDamage >> skillPrice;
+			tempSkill.setValue(skillName, skillDamage, skillPrice);
+			skill.push_back(tempSkill);
+		}
+
+		//其它杂项初始化
+		infile >> roomNum;
+		bool tempIsInRoom = 0;
+		infile >> tempIsInRoom;
+		hall.setIfIn(tempIsInRoom);
+		infile >> tempIsInRoom;
+		The_black_forest.setIfIn(tempIsInRoom);
+
+		if (roomNum == 0) {
+			mySorcerer->inRoom(&hall);
+		}
+		else if (roomNum == 1) {
+			mySorcerer->inRoom(&The_black_forest);
+		}
+	}
+	while (check) {
+		//如果在游戏中死亡
+		if (mySorcerer->getBloodValue() == 0) {
+			mySorcerer->afterDead();
+			system("pause");//格式化处理
+			system("cls");
+		}
+		system("pause");//格式化处理
+		system("cls");
+		//提示语输入
+		cout << "输入 查看属性 可以查看当前自己的属性" << endl;
+		cout << "输入 查用药品 可以查看或使用自己拥有的药品" << endl;
+		cout << "输入 查看道具 可以查看自己目前已经拥有的魔法道具" << endl;
+		cout << "输入 进入店铺 可以进入关卡的店铺" << endl;
+		cout << "输入 保存进度 可以保存当前进度" << endl;
+		cout << "输入 退出游戏 可以退出当前游戏" << endl;
 		cout << "你目前所在的位置为：" << mySorcerer->getRoom()->getName() << endl;
-		cout << "输入地图左上角的数字可以进入该地图" << endl;
+		cout << "输入地图上房间的名字可以进入该房间" << endl;
 		cout << "此关卡的地图：" << endl;
-		mapfinal.showMap();
-		cout << "请输入数字选择:" << endl;
-		int op = 0;
-		bool ifWin = 0;
-		int op1 = 1;	//选打什么怪用
-		int op2 = 0;
+		map.showMap();
+		cout << "请输入你的选择:" << endl;
+			//选择为op
+		string op = " ";
 		cin >> op;
-		switch (op)
-		{
-		case 100:
+		if (op == "查看属性") {
 			system("cls");
 			mySorcerer->showInformation();
-			break;
-		case 101:
+		}
+		else if (op == "查用药品") {
 			system("cls");
 			mySorcerer->showMedicine();
-			break;
-		case 102:
+		}
+		else if (op == "查看道具 ") {
 			system("cls");
 			mySorcerer->showMagicItem();
-			break;
-		case 103:
+		}
+		else if (op == "进入店铺") {
 			system("cls");
-			shop_G2.showShop(mySorcerer);
-			break;
-		case 110:
-			cout << "还未设置" << endl;
-			break;
-		case 111:
+			shop.showShop(mySorcerer);
+		}
+		else if (op == "保存进度") {
+			mySorcerer->setMyCheckPoint(1);
+			//文件处理
+			File myFile(mySorcerer->getName() + ".txt");
+			File checkPointFile(mySorcerer->getName() + "State" + ".txt");//保存该关卡的进度
+			ofstream tempFile;
+			ofstream stateFile;
+				//信息保存操作
+				//本身属性信息保存
+			tempFile.open(mySorcerer->getName() + ".txt");
+			tempFile << mySorcerer->getDisguiseValue() << " "
+				<< mySorcerer->getForceValue() << " "
+				<< mySorcerer->getDefenceValue() << " "
+				<< mySorcerer->getMagicValue() << " "
+				<< mySorcerer->getBloodValue() << " "
+				<< mySorcerer->getMoney() << " "
+				<< mySorcerer->getName() << endl;
+			tempFile << mySorcerer->getMagicitemNum() << " ";
+			for (int i = 0; i < mySorcerer->getMagicitemNum(); i++) {
+				tempFile << mySorcerer->getMagicitem()[i].getName() << " " << mySorcerer->getMagicitem()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getHorcruxNum() << " ";
+			for (int i = 0; i < mySorcerer->getHorcruxNum(); i++) {
+				tempFile << mySorcerer->getHorcrux()[i].getName() << " " << mySorcerer->getHorcrux()[i].getId() << endl;
+			}
+			tempFile << mySorcerer->getSkillNum() << " ";
+			for (int i = 0; i < mySorcerer->getSkillNum(); i++) {
+				tempFile << mySorcerer->getSkill()[i].getName() << " " << mySorcerer->getSkill()[i].getDamage() << endl;
+			}
+			tempFile << mySorcerer->getMedicineNum() << " ";
+			for (int i = 0; i < mySorcerer->getMedicineNum(); i++) {
+				tempFile << mySorcerer->getMedicine()[i].getName() << " " << mySorcerer->getMedicine()[i].getRecoverValue() << " " << mySorcerer->getMedicine()[i].getPrice() << endl;
+			}
+			tempFile << mySorcerer->getMyCheckpoint() << endl;
+			cout << "人物属性信息保存成功!" << endl;
+			//关卡信息保存
+			stateFile.open(mySorcerer->getName() + "State" + ".txt");
+			stateFile << shop.getMedicineNum() << " ";
+			for (int i = 0; i < shop.getMedicineNum(); i++) {
+				stateFile << shop.getMedicine()[i].getName() << " "
+					<< shop.getMedicine()[i].getRecoverValue() << " "
+					<< shop.getMedicine()[i].getPrice() << endl;
+			}
+			stateFile << shop.getSkillNum() << " ";
+			for (int i = 0; i < shop.getSkillNum(); i++) {
+				stateFile << shop.getSkill()[i].getName() << " "
+					<< shop.getSkill()[i].getDamage() << " "
+					<< shop.getSkill()[i].getPrice() << endl;
+			}
+			stateFile << " " << roomNum << endl;
+			stateFile << hall.getIfIn() << " "
+				<< The_black_forest.getIfIn() << endl;
+				//	//店铺
+			mySorcerer->setMyCheckPoint(1);
+			cout << "该关卡状态信息保存成功！" << endl;
+			tempFile.close();
+			stateFile.close();
+		}
+		else if (op == "退出游戏") {
 			cout << "你已经结束该游戏。" << endl;
+			system("pause");
+			system("cls");
 			return -1;
 			break;
-		default:
-			cout << "操作失败！" << endl;
-			break;
-		case 1:
+		}
+		else if (op == "大厅" && roomNum == 0 || op == "黑森林" && roomNum == 1) {
+			system("cls");
+			cout << "你已经在该位置！" << endl;
+				//格式化操作	
+		}
+		else if (op == "大厅") {
+			roomNum = 0;
+			mySorcerer->inRoom(&hall);
+			system("cls");
+			cout << "欢迎来到 " << hall.getName() << endl;
+			cout << "正义的魔法师们：\n勇敢地去与黑魔王战斗吧！\n" << endl;
+		}
+		else if (op == "黑森林") {
+			roomNum = 1;
 			mySorcerer->inRoom(&The_black_forest);
-			cout << "欢迎来到魔法部" << endl;
-			//加一些话
+			system("cls");
+			mySorcerer->inRoom(&The_black_forest);
+			cout << "欢迎来到黑森林" << endl;
+				//加一些话
 			cout << "此时伏地魔正在黑森林里，你是否选择进行最终之战" << endl;
 			cout << "1.是		2.否" << endl;
-			cin >> op1;
+			int op_forest = 0;
+			bool ifWin = 0;
+			cin >> op_forest;
 			system("cls");
-			if (op1 == 1) {
+			if (op_forest == 1) {
 				ifWin = mySorcerer->battle(mySorcerer, voldemort);
 				if (ifWin == 1) {
 					//成功打败的话
-					check = 1;
+					check = 0;
+					cout << "你击败了黑魔王！" << endl;
 				}
 				else if (ifWin == 0) {
+					mySorcerer->setBlood(0);
 					cout << "挑战失败！" << endl;
+					mySorcerer->inRoom(&hall);
+						//本关地点设置 0大厅 1魔法部 2古灵阁
+					roomNum = 0;
+					}
+				}
+				else if (op_forest == 2) {
+					cout << "你成功逃离。" << endl;
+					mySorcerer->inRoom(&hall);
+				}
+				else {
+					cout << "操作失败！你已经退出房间。" << endl;
 					mySorcerer->inRoom(&hall);
 				}
 			}
-			else if (op1 == 2) {
-				cout << "你成功逃离。" << endl;
-				mySorcerer->inRoom(&hall);
-			}
 			else {
-				cout << "操作失败！请正确输入。" << endl;
-				mySorcerer->inRoom(&hall);
+				cout << "输入错误！" << endl;
 			}
-			break;
-		}
+			cout << "恭喜你通过所有关卡" << endl;
+			system("pause");
+			system("cls");
 	}
-	cout << "恭喜你通过所有关卡" << endl;
 	return 1;
 }

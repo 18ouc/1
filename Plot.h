@@ -16,13 +16,13 @@ class Plot
 {
 public:
 	Plot();
-	int init1(sorcerer *mySorcerer, int myCheckPoint = 0);	//代表剧情1即第一关
-	int init2(sorcerer *mySorcerer);
-	int init3(sorcerer *mySorcerer);
-	int init4(sorcerer *mySorcerer);
-	int init5(sorcerer *mySorcerer);
-	int init6(sorcerer *mySorcerer);
-	int initFinal(sorcerer *mySorcerer);
+	int init1(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);	//代表剧情1即第一关
+	int init2(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init3(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init4(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init5(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init6(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int initFinal(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
 	void init_new(sorcerer *mySorcerer);
 	~Plot();
 private:

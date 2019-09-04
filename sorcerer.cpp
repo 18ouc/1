@@ -246,6 +246,7 @@ void sorcerer::showMedicine() {
 void sorcerer::addMagicitem(Magicitem temp) {
 	magicitem.push_back(temp);
 	cout << "¹§Ï²Äã»ñµÃÁË£º" << temp.getName() << endl;
+	magicitemNum = magicitem.size();
 }
 
 void sorcerer::addHorcrux(Horcrux temp) {

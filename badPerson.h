@@ -14,6 +14,7 @@ public:
 	double getDown();
 	double getUp();
 	string getName();
+	void setValue(double blood = 0, double down = 0, double up = 0, string name = 0);
 private:
 	double blood;
 	double down;	//	对主角造成伤害的下限

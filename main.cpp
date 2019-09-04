@@ -52,7 +52,9 @@ int main() {
 	//streampos fp = file.tellg(); //fp为文件指针的偏移量
 	string temp_file;
 	Plot myPlot;
+	bool ifNew = 0;
 	while (1) {
+		mySorcerer->setMyCheckPoint(0);
 		cout << "Harry		Potter" << endl;
 		cout << "1.新的旅途			2.读取存档			3.退出" << endl;
 		int choice;
@@ -62,14 +64,39 @@ int main() {
 		case 1:
 			myPlot.init_new(mySorcerer);
 			ifEnd = myPlot.init1(mySorcerer);
-			//if (ifEnd == -1)
-			//	return 0;
-			//ifEnd = myPlot.init2(mySorcerer);
-			//ifEnd = myPlot.init3(mySorcerer);
-			//ifEnd = myPlot.init4(mySorcerer);
-			//ifEnd = myPlot.init5(mySorcerer);
-			//ifEnd = myPlot.init6(mySorcerer);
-			//ifEnd = myPlot.initFinal(mySorcerer);
+			if (ifEnd == -1) {
+				break;
+			}
+			mySorcerer->setMyCheckPoint(2);
+			ifEnd = myPlot.init2(mySorcerer);
+			if (ifEnd == -1) {
+				break;
+			}
+			mySorcerer->setMyCheckPoint(3);
+			ifEnd = myPlot.init3(mySorcerer);
+			if (ifEnd == -1) {
+				break;
+			}
+			mySorcerer->setMyCheckPoint(4);
+			ifEnd = myPlot.init4(mySorcerer);
+			if (ifEnd == -1) {
+				break;
+			}
+			mySorcerer->setMyCheckPoint(5);
+			ifEnd = myPlot.init5(mySorcerer);
+			if (ifEnd == -1) {
+				break;
+			}
+			mySorcerer->setMyCheckPoint(6);
+			ifEnd = myPlot.init6(mySorcerer);
+			if (ifEnd == -1) {
+				break;
+			}
+			mySorcerer->setMyCheckPoint(7);
+			ifEnd = myPlot.initFinal(mySorcerer);
+			if (ifEnd == -1) {
+				break;
+			}
 			break;
 		case 2:
 			//file.seekg(0, ios::end); //将文件指针指向文件末端
@@ -129,50 +156,64 @@ int main() {
 			cout << "人物状态初始化完毕！" << endl;
 			file.close();
 			infile.close();
-			cout << myCheckpoint << 666 << endl;
+			system("pause");
+			system("cls");
+			ifNew = 1;
 			switch (myCheckpoint) {
 			case 1:
 				ifEnd = 0;
-				ifEnd = myPlot.init1(mySorcerer, myCheckpoint);
+				ifEnd = myPlot.init1(mySorcerer, myCheckpoint, ifNew);
 				if (ifEnd == -1) {
 					break;
 				}
-				//case 2:
-				//	ifEnd = 0;
-				//	ifEnd = myPlot.init2(mySorcerer);
-				//	if (ifEnd == -1) {
-				//		break;
-				//	}
-				//case 3:
-				//	ifEnd = 0;
-				//	ifEnd = myPlot.init3(mySorcerer);
-				//	if (ifEnd == -1) {
-				//		break;
-				//	}
-				//case 4:
-				//	ifEnd = 0;
-				//	ifEnd = myPlot.init4(mySorcerer);
-				//	if (ifEnd == -1) {
-				//		break;
-				//	}
-				//case 5:
-				//	ifEnd = 0;
-				//	ifEnd = myPlot.init5(mySorcerer);
-				//	if (ifEnd == -1) {
-				//		break;
-				//	}
-				//case 6:
-				//	ifEnd = 0;
-				//	ifEnd = myPlot.init6(mySorcerer);
-				//	if (ifEnd == -1) {
-				//		break;
-				//	}
-				//case 7:
-				//	ifEnd = 0;
-				//	ifEnd = myPlot.initFinal(mySorcerer);
-				//	if (ifEnd == -1) {
-				//		break;
-				//	}
+				ifNew = 0;
+				mySorcerer->setMyCheckPoint(2);
+			case 2:
+				ifEnd = 0;
+				ifEnd = myPlot.init2(mySorcerer, myCheckpoint, ifNew);
+				if (ifEnd == -1) {
+					break;
+				}
+				ifNew = 0;
+				mySorcerer->setMyCheckPoint(3);
+			case 3:
+				ifEnd = 0;
+				ifEnd = myPlot.init3(mySorcerer, myCheckpoint, ifNew);
+				if (ifEnd == -1) {
+					break;
+				}
+				ifNew = 0;
+				mySorcerer->setMyCheckPoint(4);
+			case 4:
+				ifEnd = 0;
+				ifEnd = myPlot.init4(mySorcerer, myCheckpoint, ifNew);
+				if (ifEnd == -1) {
+					break;
+				}
+				ifNew = 0;
+				mySorcerer->setMyCheckPoint(5);
+			case 5:
+				ifEnd = 0;
+				ifEnd = myPlot.init5(mySorcerer, myCheckpoint, ifNew);
+				if (ifEnd == -1) {
+					break;
+				}
+				ifNew = 0;
+				mySorcerer->setMyCheckPoint(6);
+			case 6:
+				ifEnd = 0;
+				ifEnd = myPlot.init6(mySorcerer, myCheckpoint, ifNew);
+				if (ifEnd == -1) {
+					break;
+				}
+				ifNew = 0;
+				mySorcerer->setMyCheckPoint(7);
+			case 7:
+				ifEnd = 0;
+				ifEnd = myPlot.initFinal(mySorcerer, myCheckpoint, ifNew);
+				if (ifEnd == -1) {
+					break;
+				}
 			default:
 				cout << "出现错误！" << endl;
 				break;

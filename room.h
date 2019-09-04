@@ -20,7 +20,8 @@ public:
 	bool getIfIn();
 	void showBadPerson();
 	void eraseBadPerson(int id);
-	badPerson getBadPerson(int id);
+	badPerson getBadPersonSpecial(int id);
+	vector<badPerson> getBadPerson();
 	int getBadPersonSize();
 	void setIfIn(bool temp);
 	~room();
@@ -29,6 +30,7 @@ private:
 	vector<badPerson> badperson;
 	vector<goodPerson> goodperson;
 	bool ifIn;
+	int badPersonNum;
 };
 #endif
 
