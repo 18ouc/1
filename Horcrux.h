@@ -11,6 +11,7 @@ public:
 	~Horcrux();
 	string getName();
 	int getId();
+	void setValue(string name = 0, int id = 0);
 private:
 	string name;
 	int id;

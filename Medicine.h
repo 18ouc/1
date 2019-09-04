@@ -4,11 +4,9 @@
 #include <iostream>
 #include <string>
 using namespace std;
-class Medicine :
-	public Equipment
-{
+class Medicine : public Equipment {
 public:
-	Medicine(string name = 0, int recoverValue = 0, int price = 0) : name(name), recoverValue(recoverValue), price(price){};
+	Medicine(string name = 0, int recoverValue = 0, int price = 0);
 	string getName();
 	int getRecoverValue();
 	int getPrice();

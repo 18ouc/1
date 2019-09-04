@@ -3,16 +3,18 @@
 #include <iostream>
 #include <string>
 using namespace std;
-class Skill
-{
+class Skill {
 public:
-	Skill(string name = 0, double damage = 0) : name(name), damage(damage) {};
+	Skill(string name = 0, int damage = 0, int price = 0);
 	~Skill();
 	string getName();
-	double getDamage();
+	int getDamage();
+	void setValue(string name = 0, int damage = 0, int price = 0);
+	int getPrice();
 private:
 	string name;
-	double damage;
+	int damage;
+	int price;
 };
 
 #endif

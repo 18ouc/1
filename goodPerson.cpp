@@ -1,19 +1,12 @@
 #include "goodPerson.h"
 
-
-
-
-
-goodPerson::~goodPerson()
-{
+goodPerson::~goodPerson() {
 }
 
-string goodPerson::getName()
-{
+string goodPerson::getName() {
 	return name;
 }
 
-string goodPerson::getSentence()
-{
+string goodPerson::getSentence() {
 	return sentence;
 }

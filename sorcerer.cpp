@@ -1,15 +1,19 @@
 #include "sorcerer.h"
+
 sorcerer::sorcerer(){
 	cout << "人物创建成功！" << endl;
 	skillNum = 0;
 	equipmentNum = 0;
 	horcruxNum = 0;
+	magicitemNum = 0;
+	horcruxNum = 0;
+	myCheckpoint = 0;
 }
-sorcerer::~sorcerer()
-{
+
+sorcerer::~sorcerer() {
 }
-void sorcerer::setValue(double disguiseValue, double forceValue, double defenceValue, double magicValue, double bloodValue, string name, double money)
-{
+
+void sorcerer::setValue(double disguiseValue, double forceValue, double defenceValue, double magicValue, double bloodValue, string name, double money) {
 	this->disguiseValue = disguiseValue;
 	this->forceValue = forceValue;
 	this->defenceValue = defenceValue;
@@ -28,83 +32,101 @@ void sorcerer::setValue(double disguiseValue, double forceValue, double defenceV
 	cout << "金币   = " << money << endl;
 }
 
-bool sorcerer::isSkillEmpty()
-{
+bool sorcerer::isSkillEmpty() {
 	if (skill.empty())
 		return 1;
 	else return 0;
 }
-int sorcerer::getSkillNum()
-{
+
+int sorcerer::getSkillNum() {
 	return skillNum;
 }
-int sorcerer::getEquipmentNum()
-{
+
+int sorcerer::getEquipmentNum() {
 	return equipmentNum;
 }
-int sorcerer::getHorcruxNum()
-{
+
+int sorcerer::getHorcruxNum() {
 	return horcruxNum;
 }
-int sorcerer::getMyCheckpoint()
-{
+
+int sorcerer::getMyCheckpoint() {
 	return myCheckpoint;
 }
-vector<Skill> sorcerer::getSkill()
-{
+
+int sorcerer::getMedicineNum() {
+	return medicineNum;
+}
+
+void sorcerer::changeMedicineNum() {
+	medicineNum = medicine.size();
+}
+
+void sorcerer::setMyCheckpoint(int temp) {
+	myCheckpoint = temp;
+}
+
+vector<Skill> sorcerer::getSkill() {
 	return skill;
 }
-vector<Horcrux> sorcerer::getHorcrux()
-{
+
+vector<Horcrux> sorcerer::getHorcrux() {
 	return horcrux;
 }
-vector<Medicine> sorcerer::getMedicine()
-{
+
+vector<Medicine> sorcerer::getMedicine() {
 	return medicine;
 }
-int sorcerer::getBloodValue()
-{
+
+int sorcerer::getMagicitemNum() {
+	return magicitemNum;
+}
+
+int sorcerer::getBloodValue() {
 	return bloodValue;
 }
-int sorcerer::getForceValue()
-{
+
+int sorcerer::getForceValue() {
 	return forceValue;
 }
-int sorcerer::getDefenceValue()
-{
+
+int sorcerer::getDefenceValue() {
 	return defenceValue;
 }
-int sorcerer::getMagicValue()
-{
+
+int sorcerer::getMagicValue() {
 	return magicValue;
 }
-int sorcerer::getMoney()
-{
+
+int sorcerer::getMoney() {
 	return money;
 }
-void sorcerer::increaseBlood(int blood)
-{
+
+void sorcerer::increaseBlood(int blood) {
 	bloodValue += blood;
+	cout << "你的血量增加了" << blood << endl;
 }
-void sorcerer::decreaseBlood(int blood)
-{
+
+void sorcerer::decreaseBlood(int blood) {
 	bloodValue -= blood;
+	cout << "你的血量减少了" << blood << endl;
 }
-void sorcerer::setBlood(int blood)
-{
+
+void sorcerer::setBlood(int blood) {
 	this->bloodValue = blood;
 }
-void sorcerer::addSkill(Skill mySkill)
-{
+
+void sorcerer::addSkill(Skill mySkill) {
 	cout << "恭喜您获得技能：" << mySkill.getName() << endl;
 	skill.push_back(mySkill);
+	this->increaseSkillNum();
 }
-void sorcerer::increaseSkillNum()
-{
+
+void sorcerer::increaseSkillNum() {
 	skillNum++;
 }
-void sorcerer::showInformation()
-{
+
+void sorcerer::showInformation() {
 	cout << "当前您的属性情况如下：" << endl;
 	cout << "伪装值 = " << disguiseValue << endl;
 	cout << "武力值 = " << forceValue << endl;
@@ -114,8 +136,8 @@ void sorcerer::showInformation()
 	cout << "血量   = " << bloodValue << endl;
 	cout << "金币   = " << money << endl;
 }
-bool sorcerer::battle(sorcerer * mySorcerer, badPerson badperson)
-{
+
+bool sorcerer::battle(sorcerer * mySorcerer, badPerson badperson) {
 	double otherBloodNum = badperson.getblood();
 	int otherDamageNum_Down = badperson.getDown();
 	int otherDamageNum_Up = badperson.getUp();
@@ -126,24 +148,11 @@ bool sorcerer::battle(sorcerer * mySorcerer, badPerson badperson)
 	int ii = 1;//代表战斗的轮次数
 	srand(time(NULL));
 	while (1) {
-		if (mySorcererBlood == 0) {
-			if (otherBloodNum == 0) {
-				cout << "双方同归于尽。" << endl;
-			}
-			cout << "很遗憾，您的本场战斗失败。。。" << endl;
-			return 0;
-		}
-		else if (otherSorcererDamage >= otherBloodNum) {
-			mySorcerer->setBlood(mySorcererBlood);
-			cout << "恭喜你，您成功打败了" << otherName << "!!!" << endl;
-			return 1;
-		}
 		system("pause");
 		system("cls");
 		if (mySorcerer->isSkillEmpty())
 			cout << "您目前没有任何技能" << endl;
-		else
-		{
+		else {
 			cout << "您目前拥有的技能：" << endl;
 			for (int i = 1; i <= mySorcerer->getSkillNum(); i++) {
 				cout << i << "." << mySorcerer->getSkill()[i - 1].getName() << endl;
@@ -156,6 +165,7 @@ bool sorcerer::battle(sorcerer * mySorcerer, badPerson badperson)
 		int op = 0;
 		double damage = 0;
 		cin >> op;
+		system("cls");
 		if (op) {
 			double skillDamage = mySorcerer->getSkill()[op - 1].getDamage();
 			cout << "您在第" << ii << "轮战斗中使用了" << mySorcerer->getSkill()[op - 1].getName() << ",";
@@ -178,26 +188,41 @@ bool sorcerer::battle(sorcerer * mySorcerer, badPerson badperson)
 			"您的血量为" << mySorcererBlood << endl;
 		cout << otherName << "的血量为" << otherBloodNum << endl;
 		ii++;
+		if (mySorcererBlood == 0) {
+			if (otherBloodNum == 0) {
+				cout << "双方同归于尽。" << endl;
+			}
+			cout << "很遗憾，您的本场战斗失败。。。" << endl;
+			return 0;
+		}
+		else if (otherSorcererDamage >= otherBloodNum) {
+			mySorcerer->setBlood(mySorcererBlood);
+			cout << "恭喜你，您成功打败了" << otherName << "!!!" << endl;
+			return 1;
+		}
 	}
 }
-void sorcerer::inRoom(room * myroom)
-{
+
+void sorcerer::inRoom(room * myroom) {
 	this->myroom = myroom;
 }
-void sorcerer::increaseMoney(int money)
-{
+
+void sorcerer::increaseMoney(int money) {
 	this->money += money;
+	cout << "你的金币增加" << money << endl;
 }
-void sorcerer::decreaseMoney(int money)
-{
+
+void sorcerer::decreaseMoney(int money) {
 	this->money -= money;
+	cout << "你的金币减少" << money << endl;
 }
-void sorcerer::addMedicine(Medicine temp)
-{
+
+void sorcerer::addMedicine(Medicine temp) {
 	medicine.push_back(temp);
+	cout << "恭喜你获得了：" << temp.getName() << endl;
 }
-void sorcerer::showMedicine()
-{
+
+void sorcerer::showMedicine() {
 	if (medicine.empty()) {
 		cout << "你目前没有任何药水" << endl;
 	}
@@ -217,13 +242,18 @@ void sorcerer::showMedicine()
 		useMedicine(op);
 	}
 }
-void sorcerer::addMagicitem(Magicitem temp)
-{
+
+void sorcerer::addMagicitem(Magicitem temp) {
 	magicitem.push_back(temp);
 	cout << "恭喜你获得了：" << temp.getName() << endl;
 }
-void sorcerer::showMagicItem()
-{
+
+void sorcerer::addHorcrux(Horcrux temp) {
+	horcrux.push_back(temp);
+	cout << "恭喜你获得了：" << temp.getName() << endl;
+}
+
+void sorcerer::showMagicItem() {
 	if (magicitem.empty()) {
 		cout << "你目前没有任何魔法道具" << endl;
 	}
@@ -234,8 +264,8 @@ void sorcerer::showMagicItem()
 		}
 	}
 }
-bool sorcerer::isHasTheMagicitem(int id)
-{
+
+bool sorcerer::isHasTheMagicitem(int id) {
 	bool temp = 0;
 	for (int i = 0; i < magicitem.size(); ++i) {
 		if (id == magicitem[i].getId())
@@ -243,32 +273,41 @@ bool sorcerer::isHasTheMagicitem(int id)
 	}
 	return temp;
 }
-void sorcerer::useMedicine(int op)
-{
+
+void sorcerer::useMedicine(int op) {
 	vector<Medicine>::iterator it;
 	it = medicine.begin() + op - 1;
 	cout << "您使用了" << medicine[op - 1].getName() << ",血量增加了" << medicine[op - 1].getRecoverValue() << endl;
 	this->increaseBlood(medicine[op - 1].getRecoverValue());
 	medicine.erase(it);
+	this->changeMedicineNum();
 }
-void sorcerer::setMyCheckPoint(int temp)
-{
+
+void sorcerer::setMyCheckPoint(int temp) {
 	myCheckpoint = temp;
 }
-int sorcerer::getDisguiseValue()
-{
+
+void sorcerer::afterDead() {
+	cout << "由于你的游戏中死亡，系统给了你一些关怀，请拿着他们继续战斗吧！" << endl;
+	this->setBlood(1);
+	cout << "系统给了你一点血量" << endl;
+	Medicine temp("关怀药水", 25, 0);
+	this->addMedicine(temp);
+	this->increaseMoney(1500);
+}
+
+int sorcerer::getDisguiseValue() {
 	return disguiseValue;
 }
-room * sorcerer::getRoom()
-{
+
+room * sorcerer::getRoom() {
 	return myroom;
 }
-string sorcerer::getName()
-{
+
+string sorcerer::getName() {
 	return name;
 }
 
-vector<Magicitem> sorcerer::getMagicitem()
-{
+vector<Magicitem> sorcerer::getMagicitem() {
 	return magicitem;
 }

@@ -16,7 +16,7 @@ class Plot
 {
 public:
 	Plot();
-	int init1(sorcerer *mySorcerer);	//代表剧情1即第一关
+	int init1(sorcerer *mySorcerer, int myCheckPoint = 0);	//代表剧情1即第一关
 	int init2(sorcerer *mySorcerer);
 	int init3(sorcerer *mySorcerer);
 	int init4(sorcerer *mySorcerer);

@@ -36,10 +36,12 @@ public:
 	void addMedicine(Medicine temp);
 	void showMedicine();
 	void addMagicitem(Magicitem temp);
+	void addHorcrux(Horcrux temp);
 	void showMagicItem();
 	bool isHasTheMagicitem(int id);
 	void useMedicine(int op = 0);
 	void setMyCheckPoint(int temp = 0);
+	void afterDead();	//你在游戏中死亡之后，系统给与你的帮助
 	int getDisguiseValue();
 	int getBloodValue();
 	int getForceValue();
@@ -52,10 +54,14 @@ public:
 	vector<Skill> getSkill();
 	vector<Horcrux> getHorcrux();
 	vector<Medicine> getMedicine();
+	int getMagicitemNum();
 	int getSkillNum();
 	int getEquipmentNum();
 	int getHorcruxNum();
 	int getMyCheckpoint();
+	int getMedicineNum();
+	void changeMedicineNum();
+	void setMyCheckpoint(int temp = 0);
 private:
 	int disguiseValue;	
 	int forceValue;
@@ -71,6 +77,8 @@ private:
 	int skillNum;
 	int equipmentNum;
 	int horcruxNum;
+	int magicitemNum;
+	int medicineNum;
 	room *myroom;
 	int myCheckpoint;
 };

@@ -8,8 +8,7 @@
 
 using namespace std;
 
-class room 
-{
+class room {
 public:
 	room(string name = 0) : name(name) {
 		ifIn = 0;
@@ -23,6 +22,7 @@ public:
 	void eraseBadPerson(int id);
 	badPerson getBadPerson(int id);
 	int getBadPersonSize();
+	void setIfIn(bool temp);
 	~room();
 private:
 	string name;

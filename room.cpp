@@ -1,36 +1,26 @@
 #include "room.h"
 
-
-
-
-
-string room::getName()
-{
+string room::getName() {
 	return name;
 }
 
-void room::addGoodPerson(goodPerson temp)
-{
+void room::addGoodPerson(goodPerson temp) {
 	goodperson.push_back(temp);
 }
 
-void room::addBadPerson(badPerson temp)
-{
+void room::addBadPerson(badPerson temp) {
 	badperson.push_back(temp);
 }
 
-void room::inRoom()
-{
+void room::inRoom() {
 	ifIn = 1;
 }
 
-bool room::getIfIn()
-{
+bool room::getIfIn() {
 	return ifIn;
 }
 
-void room::showBadPerson()
-{
+void room::showBadPerson() {
 	cout << "该房间中坏人的情况为：" << endl;
 	if (badperson.size() == 0) {
 		cout << "该房间的无坏人" << endl;
@@ -50,18 +40,17 @@ void room::eraseBadPerson(int id)
 	badperson.erase(it);
 }
 
-badPerson room::getBadPerson(int id)
-{
+badPerson room::getBadPerson(int id) {
 	return badperson[id - 1];
 }
 
-int room::getBadPersonSize()
-{
+int room::getBadPersonSize() {
 	return badperson.size();
 }
 
+void room::setIfIn(bool temp) {
+	ifIn = temp;
+}
 
-
-room::~room()
-{
+room::~room() {
 }

@@ -7,6 +7,7 @@ class File
 {
 public:
 	File(string name = 0);
+	void upDate(int id = 0);
 	~File();
 private:
 	string name;
