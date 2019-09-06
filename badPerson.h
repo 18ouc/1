@@ -4,12 +4,10 @@
 #include <string>
 #include "Person.h"
 using namespace std;
-class badPerson :
-	public Person
-{
+class BadPerson : public Person {
 public:
-	badPerson(double blood = 0, double down = 0, double up = 0, string name = 0) : blood(blood), down(down), up(up), name(name){}
-	~badPerson();
+	BadPerson(double blood = 0, double down = 0, double up = 0, string name = 0);
+	~BadPerson();
 	double getblood();
 	double getDown();
 	double getUp();

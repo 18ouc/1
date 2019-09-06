@@ -1,8 +1,7 @@
-#pragma once
+#ifndef _MAGICITEM_H
+#define _MAGICITEM_H
 #include "Equipment.h"
-class Magicitem :
-	public Equipment
-{
+class Magicitem : public Equipment {
 public:
 	Magicitem(string name = 0, int id = 0);
 	~Magicitem();
@@ -13,4 +12,4 @@ private:
 	string name;
 	int id;
 };
-
+#endif

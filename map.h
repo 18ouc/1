@@ -5,16 +5,15 @@
 #include <vector>
 #include "room.h"
 using namespace std;
-class map
-{
+class Map {
 public:
-	map(string shape = 0) : shape(shape) {}
-	~map();
+	Map(string shape = 0) : shape(shape) {}
+	~Map();
 	void showMap();
-	void addRoom(room temp);
+	void addRoom(Room temp);
 private:
 	string shape;
-	vector<room> ROOM;
+	vector<Room> ROOM;
 };
 #endif
 

@@ -12,18 +12,17 @@
 #include "Shop.h"
 #include "Magicitem.h"
 using namespace std;
-class Plot
-{
+class Plot {
 public:
 	Plot();
-	int init1(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);	//代表剧情1即第一关
-	int init2(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
-	int init3(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
-	int init4(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
-	int init5(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
-	int init6(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
-	int initFinal(sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
-	void init_new(sorcerer *mySorcerer);
+	int init1(Sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);	//代表剧情1即第一关
+	int init2(Sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init3(Sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init4(Sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init5(Sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int init6(Sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	int initFinal(Sorcerer *mySorcerer, int myCheckPoint = 0, bool ifNew = 0);
+	void init_new(Sorcerer *mySorcerer);
 	~Plot();
 private:
 	int id;

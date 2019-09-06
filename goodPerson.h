@@ -3,12 +3,12 @@
 #include <string>
 #include "Person.h"
 using namespace std;
-class goodPerson :
+class GoodPerson :
 	public Person
 {
 public:
-	goodPerson(string name = 0, string sentence = 0) : name(name), sentence(sentence){}
-	~goodPerson();
+	GoodPerson(string name = 0, string sentence = 0);
+	~GoodPerson();
 	string getName();
 	string getSentence();
 private:

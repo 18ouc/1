@@ -8,9 +8,11 @@
 using namespace std;
 class Shop {
 public:
+	//构造函数初始化店铺
 	Shop(vector<Medicine> medicine, vector<Skill>skill, string name = 0, int medicineNumber = 0, int skillNumber = 0);
-	void buy(sorcerer * mysorcerer = NULL, int choice = 0);
-	void showShop(sorcerer *mysorcerer);
+	//用户如果要购买东西会发生的事情
+	void buy(Sorcerer * mysorcerer = NULL, int choice = 0);
+	void showShop(Sorcerer *mysorcerer);
 	vector<Medicine> getMedicine();
 	vector<Skill> getSkill();
 	int getMedicineNum();

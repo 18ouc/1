@@ -1,12 +1,15 @@
 #include "goodPerson.h"
 
-goodPerson::~goodPerson() {
+GoodPerson::GoodPerson(string name, string sentence) : name(name), sentence(sentence) {
 }
 
-string goodPerson::getName() {
+GoodPerson::~GoodPerson() {
+}
+
+string GoodPerson::getName() {
 	return name;
 }
 
-string goodPerson::getSentence() {
+string GoodPerson::getSentence() {
 	return sentence;
 }

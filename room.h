@@ -8,27 +8,27 @@
 
 using namespace std;
 
-class room {
+class Room {
 public:
-	room(string name = 0) : name(name) {
+	Room(string name = 0) : name(name) {
 		ifIn = 0;
 	}
 	string getName();
-	void addGoodPerson(goodPerson temp);
-	void addBadPerson(badPerson temp);
+	void addGoodPerson(GoodPerson temp);
+	void addBadPerson(BadPerson temp);
 	void inRoom();
 	bool getIfIn();
 	void showBadPerson();
 	void eraseBadPerson(int id);
-	badPerson getBadPersonSpecial(int id);
-	vector<badPerson> getBadPerson();
+	BadPerson getBadPersonSpecial(int id);
+	vector<BadPerson> getBadPerson();
 	int getBadPersonSize();
 	void setIfIn(bool temp);
-	~room();
+	~Room();
 private:
 	string name;
-	vector<badPerson> badperson;
-	vector<goodPerson> goodperson;
+	vector<BadPerson> badperson;
+	vector<GoodPerson> goodperson;
 	bool ifIn;
 	int badPersonNum;
 };

@@ -1,25 +1,28 @@
 #include "badPerson.h"
 
-badPerson::~badPerson() {
+BadPerson::BadPerson(double blood, double down, double up, string name) : blood(blood), down(down), up(up), name(name) {
 }
 
-double badPerson::getblood() {
+BadPerson::~BadPerson() {
+}
+
+double BadPerson::getblood() {
 	return blood;
 }
 
-double badPerson::getDown() {
+double BadPerson::getDown() {
 	return down;
 }
 
-double badPerson::getUp() {
+double BadPerson::getUp() {
 	return up;
 }
 
-string badPerson::getName() {
+string BadPerson::getName() {
 	return name;
 }
 
-void badPerson::setValue(double blood, double down, double up, string name) {
+void BadPerson::setValue(double blood, double down, double up, string name) {
 	this->blood = blood;
 	this->down = down;
 	this->up = up;

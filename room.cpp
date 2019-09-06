@@ -1,27 +1,27 @@
 #include "room.h"
 
-string room::getName() {
+string Room::getName() {
 	return name;
 }
 
-void room::addGoodPerson(goodPerson temp) {
+void Room::addGoodPerson(GoodPerson temp) {
 	goodperson.push_back(temp);
 }
 
-void room::addBadPerson(badPerson temp) {
+void Room::addBadPerson(BadPerson temp) {
 	badperson.push_back(temp);
 	badPersonNum++;
 }
 
-void room::inRoom() {
+void Room::inRoom() {
 	ifIn = 1;
 }
 
-bool room::getIfIn() {
+bool Room::getIfIn() {
 	return ifIn;
 }
 
-void room::showBadPerson() {
+void Room::showBadPerson() {
 	cout << "该房间中坏人的情况为：" << endl;
 	if (badperson.size() == 0) {
 		cout << "该房间的无坏人" << endl;
@@ -33,31 +33,31 @@ void room::showBadPerson() {
 	}
 }
 
-void room::eraseBadPerson(int id)
+void Room::eraseBadPerson(int id)
 {
-	vector<badPerson>::iterator it;
+	vector<BadPerson>::iterator it;
 	it = badperson.begin() + id - 1;
 	cout << "您击败了" << badperson[id - 1].getName()  << endl;
 	badperson.erase(it);
 }
 
-badPerson room::getBadPersonSpecial(int id) {
+BadPerson Room::getBadPersonSpecial(int id) {
 	return badperson[id - 1];
 }
 
-vector<badPerson> room::getBadPerson() {
+vector<BadPerson> Room::getBadPerson() {
 	return badperson;
 }
 
-int room::getBadPersonSize() {
+int Room::getBadPersonSize() {
 	return badperson.size();
 }
 
-void room::setIfIn(bool temp) {
+void Room::setIfIn(bool temp) {
 	ifIn = temp;
 }
 
 
 
-room::~room() {
+Room::~Room() {
 }

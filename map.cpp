@@ -1,12 +1,12 @@
 #include "map.h"
 
-map::~map() {
+Map::~Map() {
 }
 
-void map::showMap() {
+void Map::showMap() {
 	cout << shape << endl;
 }
 
-void map::addRoom(room temp) {
+void Map::addRoom(Room temp) {
 	ROOM.push_back(temp);
 }

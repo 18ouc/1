@@ -5,12 +5,14 @@
 using namespace std;
 class Skill {
 public:
-	Skill(string name = 0, int damage = 0, int price = 0);
+	Skill(string name = 0, int damage = 0, int price = 0);	//构造函数初始化技能
 	~Skill();
+	//Get方法
 	string getName();
 	int getDamage();
-	void setValue(string name = 0, int damage = 0, int price = 0);
 	int getPrice();
+	//Set方法
+	void setValue(string name = 0, int damage = 0, int price = 0);
 private:
 	string name;
 	int damage;

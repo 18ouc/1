@@ -11,7 +11,7 @@ public:
 	~File();
 private:
 	string name;
-	sorcerer* mySorcerer;
+	Sorcerer* mySorcerer;
 	//储存每个关卡的数据
 };
 #endif
